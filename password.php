@@ -3,6 +3,20 @@ include "db.php";
 
     session_start(); 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    //password verification added by Khloe Nov 8
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
+    // checks if it matches
+    if ($password !== $confirm_password) {
+        header("Location: password.php?error=mismatch");
+        exit;
+    }
+    // Password requirements min 8 chars, uppercase, lowercase, number, special char
+    $pattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/';
+    if (!preg_match($pattern, $password)) {
+        header("Location: password.php?error=invalid");
+        exit;
+    }
     
     // Retrieving session data
     $givenname = $_SESSION['givenname'];
@@ -14,21 +28,32 @@ include "db.php";
     $sex = $_SESSION['sex'];
     $birthdate = $_SESSION['birthdate'];
     $fileupload = $_SESSION['fileupload'];
-    $password = $_POST['password'];
+    $password = $_POST['password']; //should this be deleted?
 
-    // SQL query to insert the user data into the database
-    $insert = "INSERT INTO users (givenname, surname, middlename, email, password, phone, address, sex, birthdate, `valid-id`, is_verified, type) 
-           VALUES ('$givenname', '$surname', '$middlename', '$email', '$password', '$phone', '$address', '$sex', '$birthdate', '$fileupload', 0, 'user')";
+    //should we add escape strings to be safe?
 
-    // Execute the query and check if successful
-    if (mysqli_query($conn, $insert)) {
-        // After insertion, maybe announce muna na registration successful or login ba muna
-        header("Location: index.php"); 
+//added by Khloe Nov 8
+if ($conn->query($insert_user_sql)) {
+        $new_user_id = $conn->insert_id; // gets the id of the new user
+
+        // virtual wallet
+        $insert_wallet_sql = "INSERT INTO wallet (user_id, balance) VALUES ('$new_user_id', 0.00)";
+        $conn->query($insert_wallet_sql);
+
+        // clear session data
+        session_unset();
+        session_destroy();
+
+        header("Location: index.php?success=registered"); 
+        exit;
+    } else {
+        header("Location: register.php?error=db_error");
+        exit;
     }
 
 }
 
-mysqli_close($conn);
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -92,7 +117,15 @@ mysqli_close($conn);
 
                     <div class="message-container <?php if (isset($_GET['error'])) { echo 'visible'; }?>">
                         <img src="./images/warning.png">
-                        <p>Invalid password, please follow the password requirements</p>
+                        <p>
+                            <?php
+                                if (isset($_GET['error']) && $_GET['error'] == 'mismatch') {
+                                    echo 'Passwords do not match.';
+                                } elseif (isset($_GET['error']) && $_GET['error'] == 'invalid') {
+                                    echo 'Invalid password, please follow the password requirements.';
+                                }
+                            ?>
+                        </p>
                     </div>
 
                     </div>

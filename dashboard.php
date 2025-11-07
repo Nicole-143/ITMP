@@ -9,6 +9,12 @@ if (!isset($_SESSION['email'])) {
     exit();
 }
 
+// Check for unverified users added by Khloe Nov 8
+if ($_SESSION['is_verified'] == 0 && $_SESSION['user_type'] == 'user') {
+    header("Location: under_verification.php"); 
+    exit();
+}
+
 $givenname = $_SESSION['givenname']; 
 
 // Close the database connection
@@ -39,13 +45,19 @@ $conn->close();
             <li>FAQS</li>
             <li>Contact Us</li>
             <li><a href="register.php" onclick="">Register</a></li>
+            <li><a href="dashboard.php">Home</a></li> <!--added by Khloe Nov 8-->
+            <li><a href="request_document.php">Request Document</a></li> <!--NOT DONE YET added by Khloe Nov 8-->
+            <li><a href="track_request.php">Track Requests</a></li> <!--NOT DONE YET added by Khloe Nov 8-->
             <li><a href="logout.php" onclick="">Logout</a></li>
         </ul>
     </nav>
     </header>
 
     <div class="main-page">
-        <?php echo htmlspecialchars($givenname); ?>
+        <!--added by Khloe Nov 8-->
+        <h2>Welcome, <?php echo htmlspecialchars($givenname); ?>!</h2>
+        <p>Your current balance: **(Fetch wallet balance here)**</p>
+        <p>Welcome to the main user dashboard. You can now request documents.</p>
 
 
     </div>

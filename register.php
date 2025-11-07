@@ -16,6 +16,18 @@ include "db.php";
     $_SESSION['sex'] = $_POST['sex'];
     $_SESSION['birthdate'] = $_POST['birthdate'];
 
+    // Age verification added by Khloe Nov 8
+    $birthdate = new DateTime($_POST['birthdate']);
+    $today = new DateTime();
+    $age = $birthdate->diff($today)->y;
+
+    if ($age < 18) {
+        header('Location: register.php?error=underage');
+        exit;
+    }
+
+    //add list of allowed addresses here outside addresses should be denied NOT DONE
+
     header('Location: upload_id.php'); // Redirect to upload id page
     exit;
 
@@ -54,6 +66,14 @@ mysqli_close($conn);
     </header>
 
     <div class="main-page">
+        <!--added by Khloe Nov 8-->
+        <?php if (isset($_GET['error']) && $_GET['error'] == 'underage'): ?>
+            <div class="message-container visible">
+                <img src="./images/warning.png">
+                <p>Registration denied: You must be at least 18 years old to register.</p>
+            </div>
+        <?php endif; ?>
+        <!--end-->
        <div class="form-box register-box">
                 
                 <h1>Registration - Personal Information</h1>

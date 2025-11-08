@@ -97,9 +97,9 @@ mysqli_close($conn);
                         <label>Given Name</label><br>
                         <input type="text" class="given" name="givenname" placeholder="Given Name" required><br>
                     
-                        <div class="message-container <?php if (isset($_GET['error'])) { echo 'visible'; }?>">
+                        <div class="message-container<?php if (isset($_GET['error'])) { echo 'visible'; }?>">
                         <img src="./images/warning.png">
-                        <p>
+                        <p> 
                             <?php
                                 if (isset($_GET['error']) && $_GET['error'] == 'underage') {
                                     echo 'Registration denied: You must be at least 18 years old to register';

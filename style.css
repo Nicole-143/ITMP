@@ -252,14 +252,13 @@ form p a{
        
 }
 
-.right .inner-top{
-    margin-bottom:-400px;
+.right .given{
+    margin-bottom:50px;
 }
 .right .inner-bottom{
-    
     display:flex;
     gap:30px;
-    margin-top: 250px;
+    margin-top: 161px;
 }
 
 /*Upload ID Form Styles*/

@@ -66,14 +66,7 @@ mysqli_close($conn);
     </header>
 
     <div class="main-page">
-        <!--added by Khloe Nov 8-->
-        <?php if (isset($_GET['error']) && $_GET['error'] == 'underage'): ?>
-            <div class="message-container visible">
-                <img src="./images/warning.png">
-                <p>Registration denied: You must be at least 18 years old to register.</p>
-            </div>
-        <?php endif; ?>
-        <!--end-->
+        
        <div class="form-box register-box">
                 
                 <h1>Registration - Personal Information</h1>
@@ -103,6 +96,21 @@ mysqli_close($conn);
                     <div class="inner-top">
                         <label>Given Name</label><br>
                         <input type="text" class="given" name="givenname" placeholder="Given Name" required><br>
+                    
+                        <div class="message-container <?php if (isset($_GET['error'])) { echo 'visible'; }?>">
+                        <img src="./images/warning.png">
+                        <p>
+                            <?php
+                                if (isset($_GET['error']) && $_GET['error'] == 'underage') {
+                                    echo 'Registration denied: You must be at least 18 years old to register';
+                                } elseif (isset($_GET['error']) && $_GET['error'] == 'invalid') { //add more restrictions
+                                    echo 'Registration denied: Invalid values';
+                                }
+                            ?>
+                        </p>
+                        </div>
+                    
+                    
                     </div>
                     
                     <div class="inner-bottom">

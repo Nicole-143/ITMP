@@ -251,6 +251,10 @@ form p a{
    flex-direction: column;
        
 }
+
+.right .inner-top{
+    margin-bottom:-400px;
+}
 .right .inner-bottom{
     
     display:flex;

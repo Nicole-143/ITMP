@@ -629,9 +629,10 @@ textarea:focus {
     margin-bottom: -10px;
 }
 
-.user-container p{
+.user-container p.description{
     margin:10px 20px 0px;
     font-size:22px;
+    
      
 }
 

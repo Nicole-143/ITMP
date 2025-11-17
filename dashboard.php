@@ -56,7 +56,7 @@ $conn->close();
         <div class="user-container">
 
         <h2>Welcome <?php echo htmlspecialchars($givenname); ?>!</h2>
-        <p class="p description">Your one-stop platform for easy and fast barangay document requests.</p>
+        <p class="description">Your one-stop platform for easy and fast barangay document requests.</p>
          
         <?php
         include "db.php"; 

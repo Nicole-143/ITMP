@@ -50,63 +50,61 @@ $conn->close();
     </header>
 
 
-    <div class="main-dashboard">
-        <div class="user-container">
-
-        <h2>Welcome <?php echo htmlspecialchars($givenname); ?>!</h2>
-        <p>Your one-stop platform for easy and fast barangay document requests.</p>
-         
-        <?php
-        include "db.php"; 
-
-
-        $sql = "SELECT doc_id, doc_name, description FROM document_types"; 
-        $result = $conn->query($sql);
-
-        if ($result->num_rows > 0) {
-            
-            echo '<table class="document-btns">';
-
-            //row counter
-            $rowCounter = 0;
-
-            //first row of the table
-            echo '<tr>';
-
-            
-            while ($row = mysqli_fetch_row($result)) {
+    <div class="main-page">
+       <div class="form-box register-box ">
+                <div class="stretch-page">
+                <div class="top-list">
                 
-                $id = $row[0];
-                $name = $row[1];
-                $description = $row[2];  
-                
-                echo '<td>';
-                echo '<a href="document_details.php?view=' . $id . '"><b>' .htmlspecialchars($name) .'</b><p>'. htmlspecialchars($description).'</p></a><br>';
-                echo '</td>';
+                <h1>Community Tax Certificate</h1>
 
-               
-                $rowCounter++;
+                    <h2 class="htop">Eligibility</h2>
+                    <ul>
+                        <li>Resident of the Philippines</li>
+                        <li>18 years old and above</li>
+                        <li>Individuals who have earned salaries for at least 30 consecutive working days</li>
+                        <li>Those who have a real estate property of a collective asset value of PHP 1,000 and above within the city</li>
+                        <li>Those who are required by the law to file income tax returns</li>
+                    </ul>
 
-             
-                if ($rowCounter % 3 == 0) {
-                    echo '</tr><tr>'; 
-                }
-            }
+                    <h2 class="htop">Requirements</h2>
+                    <ul>
+                        <?php
 
-            // end at last column
-            if ($rowCounter % 3 != 0) {
-                echo '</tr>';
-            }
+                            include "db.php"; 
 
-            echo '</table>';
-        } else {
-            echo "No data available.";
-        }
+                            if (isset($_GET['view'])) {
+                                $id = $_GET['view'];     
+                            
 
-        mysqli_close($conn);
-        
-        ?>
+                            $sql = "SELECT r.req_name
+                                    FROM doc_type_requirements dtr
+                                    JOIN requirements r ON dtr.req_id = r.req_id
+                                    WHERE dtr.doc_id = $id";
+
+                            $result = mysqli_query($conn, $sql);
+
+                            
+                            if (mysqli_num_rows($result) > 0) {
+                                while ($row = mysqli_fetch_row($result)) {
+                                    // Fetch req_name
+                                    echo "<li>".$row[0] . "</li>"; 
+                                }
+                            } else {
+                                echo "No requirements found for this document ID.";
+                            }
+                            }
+                            mysqli_close($conn);
+                        ?> 
+                    </ul>              
+                </div>
+
+                <div class="bottom doc-btns">
+                    <a href="dashboard.php" class="back-btn">Back to Home</a>
+                    <a href="upload_document.php?request=<?php echo $id; ?>" class="request-btn">Request to Document</a>
+                </div>
         </div>
+</div>
+
     </div>
 </body>
 </html>

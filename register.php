@@ -1,3 +1,4 @@
+
 <?php 
 include "db.php";
 
@@ -6,6 +7,20 @@ include "db.php";
     session_start(); // Start session to hold user data between steps
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    $birthdate = $_POST['birthdate'];
+
+    // Calculate the user's age
+    $age = calculateAge($birthdate);
+
+    if ($age < 18) {
+        // If the age is less than 18, show error
+        header("Location: register.php?error");
+
+    }
+
+    else{
+
     // Save user data temporarily in session
     $_SESSION['givenname'] = $_POST['givenname'];
     $_SESSION['middlename'] = $_POST['middlename'];
@@ -16,22 +31,18 @@ include "db.php";
     $_SESSION['sex'] = $_POST['sex'];
     $_SESSION['birthdate'] = $_POST['birthdate'];
 
-    // Age verification added by Khloe Nov 8
-    $birthdate = new DateTime($_POST['birthdate']);
-    $today = new DateTime();
-    $age = $birthdate->diff($today)->y;
-
-    if ($age < 18) {
-        header('Location: register.php?error=underage');
-        exit;
-    }
-
-    //add list of allowed addresses here outside addresses should be denied NOT DONE
-
     header('Location: upload_id.php'); // Redirect to upload id page
     exit;
-
     }
+    }
+
+    function calculateAge($birthdate) {
+    $birthDate = new DateTime($birthdate);
+    $currentDate = new DateTime();
+    $age = $currentDate->diff($birthDate)->y; // difference in years
+    return $age;
+    }
+
 mysqli_close($conn);
 
 ?>
@@ -41,7 +52,7 @@ mysqli_close($conn);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Townsville Baranggay System</title>
+    <title>Townsville Barangay System</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 </head>
@@ -66,7 +77,6 @@ mysqli_close($conn);
     </header>
 
     <div class="main-page">
-        
        <div class="form-box register-box">
                 
                 <h1>Registration - Personal Information</h1>
@@ -96,24 +106,27 @@ mysqli_close($conn);
                     <div class="inner-top">
                         <label>Given Name</label><br>
                         <input type="text" class="given" name="givenname" placeholder="Given Name" required><br>
+
+                        
+                    </div>
                     
-                        <div class="message-container<?php if (isset($_GET['error'])) { echo 'visible'; }?>">
+                    
+                    <div class="top-bottom">
+                            <div class="message-container <?php if (isset($_GET['error'])) { echo 'visible'; }?>">
                         <img src="./images/warning.png">
-                        <p> 
+                        <p>
                             <?php
-                                if (isset($_GET['error']) && $_GET['error'] == 'underage') {
-                                    echo 'Registration denied: You must be at least 18 years old to register';
-                                } elseif (isset($_GET['error']) && $_GET['error'] == 'invalid') { //add more restrictions
-                                    echo 'Registration denied: Invalid values';
-                                }
+                                
+                                    echo '<p>You must be at least 18 years old to register.</p>';
+        
                             ?>
                         </p>
                         </div>
                     
-                    
-                    </div>
-                    
+                    <div class="b-bottom">    
                     <div class="inner-bottom">
+
+                    
                         <div class="left">
                             <label>Sex</label>
                             <select name="sex" class="selection">
@@ -126,14 +139,14 @@ mysqli_close($conn);
 
                         <div class="right">
                             <label>Birthdate</label>
-                            <input type="date" class="birthday" name="birthday">
+                            <input type="date" class="birthdate" name="birthdate" >
 
                         </div>
                     </div>
                     
-                    
+                    </div>
                 </div>
-
+                </div>
                 </div>
 
                 <div class="bottom">

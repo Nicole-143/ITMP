@@ -43,13 +43,19 @@ $givenname = $_SESSION['givenname'];
     </header>
 
     <div class="main-page">
-        <div class="form-box login-box" style="height: 300px; text-align: center;">
-            <img src="./images/logo.png" style="width: 100px; margin-bottom: 20px;">
-            <h1 style="font-size: 28px;">Account Under Verification</h1>
-            <p>Hello, **<?php echo htmlspecialchars($givenname); ?>**.</p>
+        <div class="form-box login-box verification">
+                
+                    <div class="brgy-logo">
+                        <img src="./images/logo.png">
+                    </div> 
+                    
+                        <h2>Account Under Verification</h2>
+                        <p class="greeting">Hello, <b><?php echo htmlspecialchars($givenname); ?></b>.</p>
             <p>Your registration is currently being reviewed by the Barangay Admin. You will not be able to request documents until your account is approved.</p>
             <p>Please check back later.</p>
+                   
         </div>
+
     </div>
 </body>
 </html>

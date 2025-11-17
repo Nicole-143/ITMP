@@ -1,3 +1,4 @@
+
 <?php
 
 session_start();
@@ -8,9 +9,8 @@ if (isset($_POST['submit'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // check if email and password match to a user 
-    // modified this line to include givenname and verification added by Khloe Nov 8
-    $sql = "SELECT id, email, givenname, is_verified, type FROM users WHERE email = '$email' AND password = '$password'";
+    // check if email and password match to a user
+    $sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
 
     
     $result = $conn->query($sql);
@@ -23,49 +23,40 @@ if (isset($_POST['submit'])) {
         $_SESSION['id'] = $user['id'];
         $_SESSION['email'] = $user['email'];
         $_SESSION['givenname'] = $user['givenname'];
-        // Verification and checking added by Khloe Nov 8
+        $_SESSION['type'] = $user['type'];             
         $_SESSION['is_verified'] = $user['is_verified'];
-        $_SESSION['type'] = $user['type'];
 
-        // Check if the user is verified added by Khloe Nov 8
-        if ($user['is_verified'] == 1) {
 
-            // Check if the user is an admin added by Khloe Nov 8
-            if ($user['type'] == 'admin') {
-                header("Location: admin_dashboard.php"); // Redirect Admin to their dashboard (NOT DONE YET)
-                exit();
-            } else {
-                header("Location: dashboard.php"); // Redirect Verified User to user dashboard
-                exit();
-            }
-
-        } else {
-            // If the user is not verified added by Khloe Nov 8
-            header("Location: under_verification.php"); 
+        if($user['type'] == 'admin')
+        {
+            header("Location: admin_dashboard.php");
             exit();
         }
-
+        else{
+            // Redirect to the dashboard
+        header("Location: dashboard.php");
+        exit();
+        }
+        
     } else {
-        // If login fails, show error 
+        // If login fails, show error
         header("Location: index.php?error");
         exit();
     }
 }
 
-// Close the database connection (only if it hasn't been closed by an exit) added by Khloe Nov 8
-if (isset($conn)) {
-    $conn->close();
-}
+// Close the database connection
+$conn->close();
+
 
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Townsville Baranggay System</title>
+    <title>Townsville Barangay System</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 </head>

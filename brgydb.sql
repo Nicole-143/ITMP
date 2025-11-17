@@ -1,5 +1,16 @@
+<<<<<<< Updated upstream
 CREATE DATABASE brgydb;
 USE brgydb;
+=======
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Nov 17, 2025 at 01:39 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
+>>>>>>> Stashed changes
 
 CREATE TABLE Users(
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -23,6 +34,7 @@ CREATE TABLE Document_Types(
     price DECIMAL(10, 2) NOT NULL
 ) AUTO_INCREMENT = 8;
 
+<<<<<<< Updated upstream
 INSERT INTO Document_Types (doc_id, doc_name, price) 
 VALUES
 (1, 'Community Tax Certificate (Cedula)', 20.00),
@@ -108,3 +120,166 @@ CREATE TABLE Payments (
   CONSTRAINT payments_fk_user FOREIGN KEY (user_id) REFERENCES Users(id),
   CONSTRAINT payments_fk_request FOREIGN KEY (request_id) REFERENCES Requests(request_id)
 );
+=======
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `brgydb`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `document_types`
+--
+
+CREATE TABLE `document_types` (
+  `doc_id` int(12) NOT NULL,
+  `doc_name` varchar(255) NOT NULL,
+  `price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `requests`
+--
+
+CREATE TABLE `requests` (
+  `request_id` int(12) NOT NULL,
+  `user_id` int(12) NOT NULL,
+  `doc_id` int(12) NOT NULL,
+  `status` enum('pending','approved','denied','cancelled') NOT NULL DEFAULT 'pending'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `requirements`
+--
+
+CREATE TABLE `requirements` (
+  `req_id` int(12) NOT NULL,
+  `req_name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `uploaded_files`
+--
+
+CREATE TABLE `uploaded_files` (
+  `file_id` int(12) NOT NULL,
+  `user_id` int(12) NOT NULL,
+  `request_id` int(12) DEFAULT NULL,
+  `filename` varchar(255) NOT NULL,
+  `file_type` enum('verification','id_photo','proof_of_residency') NOT NULL,
+  `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(12) NOT NULL,
+  `givenname` varchar(255) NOT NULL,
+  `surname` varchar(255) NOT NULL,
+  `middlename` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `phone` varchar(255) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `sex` enum('Female','Male','Other') NOT NULL,
+  `birthdate` date NOT NULL,
+  `is_verified` tinyint(1) NOT NULL DEFAULT 0,
+  `type` enum('admin','user') NOT NULL DEFAULT 'user',
+  `upload_id` varchar(255) NOT NULL,
+  `registerdate` date NOT NULL DEFAULT current_timestamp(),
+  `comment` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `document_types`
+--
+ALTER TABLE `document_types`
+  ADD PRIMARY KEY (`doc_id`);
+
+--
+-- Indexes for table `requests`
+--
+ALTER TABLE `requests`
+  ADD PRIMARY KEY (`request_id`),
+  ADD KEY `fk_requests_user` (`user_id`),
+  ADD KEY `fk_requests_document` (`doc_id`);
+
+--
+-- Indexes for table `uploaded_files`
+--
+ALTER TABLE `uploaded_files`
+  ADD PRIMARY KEY (`file_id`),
+  ADD KEY `fk_uploaded_files_user_id` (`user_id`),
+  ADD KEY `fk_uploaded_files_requests` (`request_id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `document_types`
+--
+ALTER TABLE `document_types`
+  MODIFY `doc_id` int(12) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `requests`
+--
+ALTER TABLE `requests`
+  MODIFY `request_id` int(12) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(12) NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `requests`
+--
+ALTER TABLE `requests`
+  ADD CONSTRAINT `fk_requests_document` FOREIGN KEY (`doc_id`) REFERENCES `document_types` (`doc_id`),
+  ADD CONSTRAINT `fk_requests_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `uploaded_files`
+--
+ALTER TABLE `uploaded_files`
+  ADD CONSTRAINT `fk_uploaded_files_requests` FOREIGN KEY (`request_id`) REFERENCES `requests` (`request_id`),
+  ADD CONSTRAINT `fk_uploaded_files_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `fk_uploaded_files_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+>>>>>>> Stashed changes

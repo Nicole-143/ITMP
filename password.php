@@ -1,9 +1,10 @@
+
 <?php 
 include "db.php";
 
     session_start(); 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    //password verification added by Khloe Nov 8
+    
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
     // checks if it matches
@@ -17,7 +18,6 @@ include "db.php";
         header("Location: password.php?error=invalid");
         exit;
     }
-    
     // Retrieving session data
     $givenname = $_SESSION['givenname'];
     $middlename = $_SESSION['middlename'];
@@ -28,32 +28,21 @@ include "db.php";
     $sex = $_SESSION['sex'];
     $birthdate = $_SESSION['birthdate'];
     $fileupload = $_SESSION['fileupload'];
-    $password = $_POST['password']; //should this be deleted?
+    $password = $_POST['password'];
 
-    //should we add escape strings to be safe?
+    // SQL query to insert the user data into the database
+    $insert = "INSERT INTO users (givenname, surname, middlename, email, password, phone, address, sex, birthdate, is_verified, type, upload_id ) 
+           VALUES ('$givenname', '$surname', '$middlename', '$email', '$password', '$phone', '$address', '$sex', '$birthdate', 0, 'user','$fileupload')";
 
-//added by Khloe Nov 8
-if ($conn->query($insert_user_sql)) {
-        $new_user_id = $conn->insert_id; // gets the id of the new user
-
-        // virtual wallet
-        $insert_wallet_sql = "INSERT INTO wallet (user_id, balance) VALUES ('$new_user_id', 0.00)";
-        $conn->query($insert_wallet_sql);
-
-        // clear session data
-        session_unset();
-        session_destroy();
-
-        header("Location: index.php?success=registered"); 
-        exit;
-    } else {
-        header("Location: register.php?error=db_error");
-        exit;
+    // Execute the query and check if successful
+    if (mysqli_query($conn, $insert)) {
+        // After insertion, maybe announce muna na registration successful or login ba muna
+        header("Location: index.php"); 
     }
 
 }
 
-$conn->close();
+mysqli_close($conn);
 ?>
 
 <!DOCTYPE html>
@@ -61,7 +50,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Townsville Baranggay System</title>
+    <title>Townsville Barangay System</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 </head>
@@ -106,23 +95,25 @@ $conn->close();
 
                     <div class="right">
                     <label>Password</label><br>
-                    <input type="password" placeholder="New Password" required><br>
+                    <input type="password" placeholder="New Password" name="password" required><br>
                     
                     <div class="spacer">
                         <p>spacer</p>
                     </div>
 
                     <label>Confirm Password</label><br>
-                    <input type="password" placeholder="Confirm Password" required><br>
+                    <input type="password" placeholder="Confirm Password" name="confirm_password"required><br>
+
+                    
 
                     <div class="message-container <?php if (isset($_GET['error'])) { echo 'visible'; }?>">
                         <img src="./images/warning.png">
                         <p>
                             <?php
                                 if (isset($_GET['error']) && $_GET['error'] == 'mismatch') {
-                                    echo 'Passwords do not match.';
+                                    echo '<p>Passwords do not match.</p>';
                                 } elseif (isset($_GET['error']) && $_GET['error'] == 'invalid') {
-                                    echo 'Invalid password, please follow the password requirements.';
+                                    echo '<p>Invalid password, please follow the password requirements.</p>';
                                 }
                             ?>
                         </p>

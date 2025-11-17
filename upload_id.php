@@ -1,24 +1,65 @@
+
 <?php 
 include "db.php";
 
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    // Reject uploaded file larger than 5MB
+    if ($_FILES["fileupload"]["size"] > 5242880) { //1024*1024* n = MB //1 MB = 1048576
+        header("Location: upload_id.php?error=large");
+        exit;
+    }
+
+    // Use fileinfo to get the mime type and reject unaccepted file types
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    $mime_type = $finfo->file($_FILES["fileupload"]["tmp_name"]);
+    $mime_types = ["application/pdf", "image/png", "image/jpeg"];
+    if ( ! in_array($mime_type, $mime_types)) {
+        header("Location: upload_id.php?error=invalid");
+        exit;
+    }
+
+    // Replace any characters not \w- in the original filename
+    $pathinfo = pathinfo($_FILES["fileupload"]["name"]);
+    $base = preg_replace("/[^\w-]/", "_", $pathinfo["filename"]);
+    $filename = $base . "." . $pathinfo["extension"];
+    
+    
+
+    // Check if the file already exists and add a number if it does
+    $upload_dir = 'uploads/';
+    $target_file = $upload_dir . $filename;
+    $i = 1;
+    while (file_exists($target_file)) {
+    // If the file exists, append number to the filename
+    $filename = $base . "($i).". $pathinfo["extension"];
+    $target_file = $upload_dir . $filename;
+    $i++;
+    }
+
+    
+
     // Save the user ID (username) in the session
-    $_SESSION['fileupload'] = $_POST['fileupload'];
-    header('Location: password.php'); // Redirect to password page
-    exit;
+    if (move_uploaded_file($_FILES["fileupload"]["tmp_name"], $target_file)) {
+        // Save the file path in the session
+        $_SESSION['fileupload'] = $filename; 
+        header('Location: password.php'); // Redirect to the next page
+        exit;
+    } 
+    
 }
 
 mysqli_close($conn);
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en">   
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Townsville Baranggay System</title>
+    <title>Townsville Barangay System</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 </head>
@@ -47,7 +88,7 @@ mysqli_close($conn);
                 
                 <h1>Registration - Valid ID</h1>
                 <p><i class="tip">Your ID will be used solely for identity verification purposes and will be handled in accordance with data privacy laws.</i></p>
-                <form action="upload_id.php" method="POST">
+                <form action="upload_id.php" enctype="multipart/form-data" method="POST">
                 <div class="top">
                     <div class="left">
 
@@ -69,7 +110,7 @@ mysqli_close($conn);
                     </ul>
                     
                     <label>Upload Image</label>
-                    <input type="file" id="myFile" name="fileupload">
+                    <input type="file" id="myFile" name="fileupload" accept=".jpg,.png,.pdf">
 
                     </div>
 
@@ -85,6 +126,20 @@ mysqli_close($conn);
                         <li>Philhealth ID</li>
                         <li>HDMF (Pag-IBIG ID)</li>
                     </ul>
+
+                        <div class="message-container <?php if (isset($_GET['error'])) { echo 'visible'; }?>">
+
+                            <img src="./images/warning.png">
+                            <p>
+                                <?php
+                                    if (isset($_GET['error']) && $_GET['error'] == 'large') {
+                                        echo '<p>File is too large (max: 5MB).</p>';
+                                    } elseif (isset($_GET['error']) && $_GET['error'] == 'invalid') {
+                                        echo '<p>Invalid file type.</p>';
+                                    }
+                                ?>
+                            </p>
+                        </div>
                     </div>
 
                 </div>

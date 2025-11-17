@@ -15,7 +15,6 @@ if ($_SESSION['is_verified'] == 0 && $_SESSION['type'] == 'user') {
     exit();
 }
 
-$givenname = $_SESSION['givenname']; 
 
 // Close the database connection
 $conn->close();
@@ -49,7 +48,6 @@ $conn->close();
         </ul>
     </nav>
     </header>
-
 
 
     <div class="main-dashboard">

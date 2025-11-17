@@ -1,3 +1,4 @@
+
 /* Base Styles */
 
 *{
@@ -249,16 +250,17 @@ form p a{
 
 .register-box .top .right{
    flex-direction: column;
-       
 }
 
-.right .given{
-    margin-bottom:50px;
+.top-bottom{
+    margin-top:161px;
 }
+
 .right .inner-bottom{
+    
     display:flex;
     gap:30px;
-    margin-top: 161px;
+    
 }
 
 /*Upload ID Form Styles*/
@@ -280,6 +282,19 @@ form p a{
 
 .valid-id label{
     font-size:16px;
+}
+
+.form-box.valid-id .right ul {
+    margin-bottom: 20px;
+}
+
+.valid-id .message-container p{
+    margin-top:0px;
+    text-align: left;
+    margin-left: 20px;    
+    font-weight: 300;
+    padding-right: 20px;
+    font-size: 18px;
 }
 
 /*Password Form Styles*/
@@ -350,4 +365,307 @@ form p a{
 .spacer{
     visibility: hidden;
 
+}
+
+/* Chrome, Safari, Edge, Opera */
+.phone, input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  
+}
+
+/* Firefox */
+.phone, input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* Under Verification*/
+.form-box.login-box.verification{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 600px;
+    height:400px;
+    text-align: center;
+}
+
+.form-box.login-box.verification h2{
+    color:var(--header-color);
+    font-size: 28px;
+    
+}
+
+.form-box.login-box.verification img{
+    width:180px;
+    margin-bottom: -10px;
+}
+
+.greeting{
+    font: size 22px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+.form-box.login-box.verification p{
+    font-size:16px;
+}
+
+/* Tables */
+
+.main-dashboard{
+    display:flex;
+    justify-content: center;
+    margin:0;
+    /*top right-left bottom*/
+    padding:20px 40px 40px;
+    
+    flex-direction: column;
+}
+
+.main-dashboard h2{
+    margin-bottom:10px;
+    font-size: 30px;
+}
+
+.top-table th{
+    background-color:var(--header-color);
+    color:white;
+    font-size:20px;
+    height:63px;
+    text-align: left;
+    padding-left:50px;
+    position: sticky;
+    top:0;
+}
+
+.approval {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: separate;  
+    border-spacing: 0;         
+    border: 1px solid var(--header-color); 
+    font-size:18px;          
+    
+}
+
+.approval th, .approval td {
+    padding: 4px;   
+    padding-left:50px;          
+    height:63px;      
+    
+}
+
+
+.approval tr:nth-child(odd) {
+  background-color: #B7CFFF;
+}
+
+.approval tr:nth-child(even) {
+  background-color: #EEEEEE;
+}
+
+.table-container {
+    
+    width: 100%;
+    height: 500px; 
+    overflow-y: auto; 
+    overflow-x: hidden;
+  
+}
+
+/* View Details */
+
+.page-container{
+    display: flex;
+    
+}
+
+.page-container a{
+    padding-right: 20px;
+    text-decoration: none;
+    color:#1E1E1E;
+}
+.info-container{
+    background-color: var(--container-bg);
+    width: 100%;
+    height: 100%;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 4px 4px 10px 10px rgba(0, 0, 0, 0.25);
+    border: 1px solid #14449D;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.info-container img{
+    width:945px;
+    border: 1px solid #000000;
+    margin-top:10px;
+    margin-bottom:20px;
+}
+
+textarea{
+    height:180px;
+    width:945px;
+    resize: none;
+    padding: 10px;
+    margin-top:10px;
+    margin-bottom:20px;
+}
+
+textarea:focus {
+    border-color: var(--header-color);
+    outline: none;
+    
+}
+
+.info-table{
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: separate;  
+    border-spacing: 0;         
+    font-size:18px;          
+    margin-bottom: 10px;
+}
+
+.info-table th, .info-table td {
+               
+    height:63px;      
+    
+}
+.blue{
+    color:#2E6BDD;
+    font-weight: 500;
+}
+
+.info-container h4{
+    font-size:24px;
+}
+
+.deny-btn{
+    background-color: #B71D1D;
+    border:1px solid #B3B3B3;
+}
+
+.approve-btn{
+    background-color: #27AF1B;
+    border:1px solid #B3B3B3;
+}
+
+.action-btns{
+    width:945px;
+    display:flex;
+    gap:20px;
+}
+
+/* Admin Dashboard*/
+
+.main-admin-dashboard{
+    display:flex;
+    justify-content: center;
+    margin:0;
+    /*top right-left bottom*/
+    padding:30px 40px 0px;
+    flex-direction: column;
+}
+
+.admin-container h2{
+    font-size:35px; 
+}
+
+.admin-container h3{
+    font-size:25px; 
+    
+    padding-bottom:12px;
+}
+
+.admin-container p{
+    
+    font-size:22px;
+    padding-bottom: 16px;
+     
+}
+
+.btn-container{
+    width:945px;
+    display:flex;
+    gap:20px;
+    justify-content: flex-start
+}
+
+.btn-container.b1{
+    padding-bottom:24px;
+}
+.button-style{
+    border: 1px solid #757575;
+    background-color: #EEEEEE;
+    width:578px;
+    height:180px;
+    border-radius: 15px;
+    padding:20px;
+    text-decoration: none;
+    color:#000000;
+}
+
+.button-style b{
+    font-size: 22px;
+    
+    
+}
+
+.button-style p{
+    margin-top:20px;
+    font-size: 18px;
+}
+
+
+/* User Dashboard*/
+
+
+.user-container h2{
+    margin:20px;
+    font-size:35px; 
+    margin-bottom: -10px;
+}
+
+.user-container p{
+    margin:10px 20px 0px;
+    font-size:22px;
+     
+}
+
+.document-btns {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: separate;  
+    border-spacing: 20px 40px;        
+    font-size:18px;    
+          
+    
+}
+
+.document-btns th, .document-btns td {
+    border: 1px solid #757575;
+    background-color: #EEEEEE;
+    width:300px;
+    height:180px;
+    border-radius: 15px;
+    padding:20px;
+    
+    
+}
+
+
+.document-btns a{
+    text-decoration: none;
+    color:#000000; 
+}
+
+.document-btns b{
+    font-size: 22px;
+}
+.document-btns p{
+    margin-top:50px;
+    font-size: 18px;
 }

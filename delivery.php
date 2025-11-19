@@ -15,11 +15,12 @@ if ($_SESSION['is_verified'] == 0 && $_SESSION['type'] == 'user') {
     exit();
 }
 
+if (isset($_GET['pickup'])) {
+    $id = $_GET['pickup'];
+} else {
+   $id=$_GET['doortodoor'];
+}
 
-if (isset($_GET['request'])) {
-    $id = $_GET['request'];
-    
-} 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -63,7 +64,49 @@ $conn->close();
 
 
     <div class="main-page">
-       <div class="form-box register-box">
+
+    <?php
+        if (isset($_GET['pickup'])) {
+
+            $id = $_GET['pickup'];
+            // If 'pickup'
+            echo '
+       <div class="form-box delivery-box ">
+                
+                <h1>Please input your contact information</h1>
+                <ul style="margin-bottom:20px;">
+                <li>We will inform you via email and SMS when your order is ready to be picked up</li>
+                <li>Please show your actual valid government ID that matches your name below to avoid delay in the release of your document/s. A photocopy or digital copy of the ID is not allowed.</li>
+                </ul>
+          
+               <form action="delivery.php?pickup=' . $id . '" method="POST">
+                <div class="main-form">
+                    <label>Recipient</label><br>
+                    <input type="text" name="recipient" placeholder="Given Name" required><br>
+                    <label>Mobile Number</label><br>
+                    <input type="number" name="mobile"placeholder="Phone Number" required><br>
+                    <label>Email Address</label><br>
+                    <input type="email" class="email" name="email" placeholder="Email Address" required><br>
+                
+                    <div class="bottom doc-btns">
+                    <a href="shipping.php?request='.$id.'" class="back-btn">Previous</a>
+                    <button type="submit">Next</button>
+                </div>
+            
+                </form>
+
+            
+        </div>
+
+
+    </div>
+    ';
+        }
+    elseif(isset($_GET['doortodoor'])) {
+    $id = $_GET['doortodoor'];
+
+    echo '
+       <div class="form-box delivery-box ">
                 
                 <h1>Please input your delivery address and contact information</h1>
                 <ul>
@@ -74,7 +117,7 @@ $conn->close();
           
                 
 
-                <form action="register.php" method="POST">
+                 <form action="delivery.php?doortodoor=' . $id . '" method="POST">
                 <div class="main-form">
                     <label>Recipient</label><br>
                     <input type="text" name="recipient" placeholder="Given Name" required><br>
@@ -86,8 +129,9 @@ $conn->close();
                     <input type="number" name="mobile"placeholder="Phone Number" required><br>
                     <label>Email Address</label><br>
                     <input type="email" class="email" name="email" placeholder="Email Address" required><br>
-            <div class="bottom doc-btns">
-                    <a href="shipping.php?view=<?php echo $id; ?>" class="back-btn">Previous</a>
+                
+                    <div class="bottom doc-btns">
+                    <a href="shipping.php?request='.$id.'" class="back-btn">Previous</a>
                     <button type="submit">Next</button>
                 </div>
             
@@ -98,5 +142,8 @@ $conn->close();
 
 
     </div>
+    ';
+} 
+    ?>
 </body>
 </html>

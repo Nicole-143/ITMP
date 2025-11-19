@@ -22,12 +22,18 @@ if (isset($_GET['request'])) {
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
+    //Check if there are uploaded files
+    if (empty($_FILES['fileupload']['name'][0])) {
+        header("Location: upload_document.php?request=$id&error=no_file");
+        exit();
+    }
+
     // Loop through each uploaded file
     foreach ($_FILES['fileupload']['name'] as $document => $file_name) {
 
         // Reject uploaded file larger than 5MB
         if ($_FILES["fileupload"]["size"][$document] > 5242880) { // 5MB limit
-            header("Location: upload_document.php?error=large");
+            header("Location: upload_document.php?request=$id&error=large");
             exit;
         }
 
@@ -36,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $mime_type = $finfo->file($_FILES["fileupload"]["tmp_name"][$document]);
         $mime_types = ["application/pdf", "image/png", "image/jpeg"];
         if (!in_array($mime_type, $mime_types)) {
-            header("Location: upload_document.php?error=invalid");
+            header("Location: upload_document.php?request=$id&error=invalid");
             exit;
         }
 
@@ -66,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Redirect to the next page
-    header('Location: payment.php?pay='. $id); // Redirect to the next page after successful upload
+    header('Location: shipping.php?request='. $id); // Redirect to the next page after successful upload
     exit;
 }
 
@@ -112,9 +118,9 @@ $conn->close();
                 <div class="top">
                     <div class="left">
 
-                    <h2>Instructions for Uploading Your ID</h2>
+                    <h2>Instructions for Uploading Your Documents</h2>
                     <ul>
-                        <li>The entire ID <b>must be visible</b> (not cropped or cut off).</li>
+                        <li>The entire file <b>must be visible</b> (not cropped or cut off).</li>
                         <li>Make sure the image is <b>clear and not blurry.</b></li>
                         <li>The following details must be clearly readable:
                             <ul class="lighter">
@@ -152,7 +158,8 @@ $conn->close();
 
                             $result = mysqli_query($conn, $sql);
 
-                            
+                           
+
                             if (mysqli_num_rows($result) > 0) {
                                 while ($row = mysqli_fetch_row($result)) {
                                     // Fetch req_name
@@ -175,6 +182,9 @@ $conn->close();
                                         echo '<p>File is too large (max: 5MB).</p>';
                                     } elseif (isset($_GET['error']) && $_GET['error'] == 'invalid') {
                                         echo '<p>Invalid file type.</p>';
+                                    }
+                                    elseif (isset($_GET['error']) && $_GET['error'] == 'no_file') {
+                                        echo '<p>No files submitted.</p>';
                                     }
                                 ?>
                             </p>

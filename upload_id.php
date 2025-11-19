@@ -6,6 +6,12 @@ session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
+    // Check if file is empty
+    if (empty($_FILES['fileupload']['name'])) {
+        header("Location: upload_id.php?error=no_file");
+        exit();
+    }
+
     // Reject uploaded file larger than 5MB
     if ($_FILES["fileupload"]["size"] > 5242880) { //1024*1024* n = MB //1 MB = 1048576
         header("Location: upload_id.php?error=large");
@@ -136,6 +142,9 @@ mysqli_close($conn);
                                         echo '<p>File is too large (max: 5MB).</p>';
                                     } elseif (isset($_GET['error']) && $_GET['error'] == 'invalid') {
                                         echo '<p>Invalid file type.</p>';
+                                    }
+                                    elseif (isset($_GET['error']) && $_GET['error'] == 'no_file') {
+                                        echo '<p>No file submitted.</p>';
                                     }
                                 ?>
                             </p>

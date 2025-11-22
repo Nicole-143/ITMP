@@ -43,14 +43,23 @@ if ($result) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $errors = [];
-    $files = $_FILES['fileupload'] ?? null;
+     $errors = [];
+    if (isset($_FILES['fileupload'])) {
+        $files = $_FILES['fileupload'];
+    } else {
+        $files = null;
+    }
 
     // Check if any file was selected
     $hasFiles = false;
-    foreach (($files['name'] ?? []) as $name) {
-        if (!empty($name)) $hasFiles = true;
+    if ($files) {
+        foreach ($files['name'] as $name) {
+            if (!empty($name)) {
+                $hasFiles = true;
+            }
+        }
     }
+
 
     if (!$hasFiles) {
         $_SESSION['upload_errors'] = ["No files submitted."];
@@ -58,51 +67,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    foreach (($files['name'] ?? []) as $req_id => $name) {
+    if ($files) {
+        foreach ($files['name'] as $req_id => $name) {
 
-        $processFile = true; // flag to check if file should be saved
+            $processFile = true;
 
-        $tmp_name = $files['tmp_name'][$req_id] ?? null;
-        $size = $files['size'][$req_id] ?? 0;
+            $tmp_name = null;
+            if (isset($files['tmp_name'][$req_id])) {
+                $tmp_name = $files['tmp_name'][$req_id];
+            }
+            
+            $size = 0;
+            if (isset($files['size'][$req_id])) {
+                $size = $files['size'][$req_id];
+            }
 
-        // Check for empty file
-        if (empty($name)) {
-            $req_name = $req_names[$req_id] ?? "Unknown Requirement";
-            $errors[] = "No file submitted for \"$req_name\".";
-            $processFile = false;
-        }
-
-
-        // Check size (5MB max for example)
-        if ($size > 5242880) {
-            $errors[] = "File \"$name\" is too large (max 5MB).";
-            $processFile = false;
-        }
-
-        // Check MIME type
-        if ($processFile && $tmp_name) {
-            $finfo = new finfo(FILEINFO_MIME_TYPE);
-            $mime = $finfo->file($tmp_name);
-            $allowed = ["application/pdf", "image/png", "image/jpeg", "image/pjpeg"];
-            if (!in_array($mime, $allowed)) {
-                $errors[] = "File \"$name\" has invalid type.";
+            // Check for empty file
+            if (empty($name)) {
+                if (isset($req_names[$req_id])) {
+                    $req_name = $req_names[$req_id];
+                } else {
+                    $req_name = "Unknown Requirement";
+                }
+                $errors[] = "No file submitted for \"$req_name\".";
                 $processFile = false;
             }
-        }
 
-       
-        if ($processFile && $tmp_name) {
-            $pathinfo = pathinfo($name);
-            $base = preg_replace("/[^\w-]/", "_", $pathinfo["filename"]);
-            $filename = $base . "." . $pathinfo["extension"];
+            // Check size
+            if ($size > 5242880) {
+                $errors[] = "File \"$name\" is too large (max 5MB).";
+                $processFile = false;
+            }
 
-            // Save in session
-            $_SESSION['fileupload'][] = [
-                'request_id' => $id,
-                'req_id' => $req_id,
-                'file_name' => $filename,
-                'tmp_name' => $tmp_name // need for request submission
-            ];
+            // Check MIME type
+            if ($processFile && $tmp_name) {
+                $finfo = new finfo(FILEINFO_MIME_TYPE);
+                $mime = $finfo->file($tmp_name);
+                $allowed = ["application/pdf", "image/png", "image/jpeg", "image/pjpeg"];
+                if (!in_array($mime, $allowed)) {
+                    $errors[] = "File \"$name\" has invalid type.";
+                    $processFile = false;
+                }
+            }
+
+            // Save in session 
+            if ($processFile && $tmp_name) {
+                $pathinfo = pathinfo($name);
+                $base = preg_replace("/[^\w-]/", "_", $pathinfo["filename"]);
+                $filename = $base . "." . $pathinfo["extension"];
+
+                $_SESSION['fileupload'][] = [
+                    'request_id' => $id,
+                    'req_id' => $req_id,
+                    'file_name' => $filename,
+                    'tmp_name' => $tmp_name
+                ];
+            }
         }
     }
 
@@ -115,7 +135,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: shipping.php?request=$id");
     exit();
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -151,7 +170,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="main-page adjust-spacing">
        
         <?php
-if (!empty($_SESSION['upload_errors'])) {
+    
+    if (!empty($_SESSION['upload_errors'])) {
     foreach ($_SESSION['upload_errors'] as $err) {
         echo '<div class="error-container">';
         echo '<img src="./images/warning.png">';

@@ -55,27 +55,31 @@ $conn->close();
                 <div class="stretch-page">
                 <div class="top-list">
                 
-                <h1>Community Tax Certificate</h1>
-
-                    <h2 class="htop">Eligibility</h2>
-                    <ul>
-                        <li>Resident of the Philippines</li>
-                        <li>18 years old and above</li>
-                        <li>Individuals who have earned salaries for at least 30 consecutive working days</li>
-                        <li>Those who have a real estate property of a collective asset value of PHP 1,000 and above within the city</li>
-                        <li>Those who are required by the law to file income tax returns</li>
-                    </ul>
-
-                    <h2 class="htop">Requirements</h2>
-                    <ul>
+                    
                         <?php
-
+    
                             include "db.php"; 
 
                             if (isset($_GET['view'])) {
                                 $id = $_GET['view'];     
-                            
+                                
+                            $sql_doc = "SELECT doc_name FROM document_types WHERE doc_id = $id";
+                            $doc_result = mysqli_query($conn, $sql_doc);
+                            if($doc_row = mysqli_fetch_row($doc_result)){
+                                        $doc_name = $doc_row[0];
+                            }
 
+                            echo'<h1>'.$doc_name.'</h1>';
+                            echo'<h2 class="htop">Eligibility</h2>
+                            <ul>
+                                <li>Resident of the Philippines</li>
+                                <li>18 years old and above</li>
+                                <li>Individuals who have earned salaries for at least 30 consecutive working days</li>
+                                <li>Those who have a real estate property of a collective asset value of PHP 1,000 and above within the city</li>
+                                <li>Those who are required by the law to file income tax returns</li>
+                            </ul>';
+                            echo'<h2 class="htop">Requirements</h2>
+                            <ul>';
                             $sql = "SELECT r.req_name
                                     FROM doc_type_requirements dtr
                                     JOIN requirements r ON dtr.req_id = r.req_id

@@ -4,6 +4,8 @@ session_start();
 
 include "db.php";
 
+
+
 if (!isset($_SESSION['email'])) {
     // Redirect to the login page if not logged in
     header("Location: index.php");
@@ -106,6 +108,7 @@ $conn->close();
         }
 
         mysqli_close($conn);
+        
         
         ?>
         </div>

@@ -18,14 +18,14 @@ if (isset($_POST['submit'])) {
     // Check if a matching user is found
     if ($result->num_rows > 0) {
         
-        $user = mysqli_fetch_array($result); // Fetch a single row as an indexed array
+        $user = mysqli_fetch_array($result); 
         // Store user data in session
         $_SESSION['id'] = $user['id'];
         $_SESSION['email'] = $user['email'];
         $_SESSION['givenname'] = $user['givenname'];
         $_SESSION['type'] = $user['type'];             
         $_SESSION['is_verified'] = $user['is_verified'];
-         $_SESSION['comment']= $user['comment'];
+        $_SESSION['comment']= $user['comment'];
 
         if($user['is_verified'] == 0)
         {

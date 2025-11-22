@@ -62,9 +62,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
     if (!$hasFiles) {
-        $_SESSION['upload_errors'] = ["No files submitted."];
+
+        if (!empty($requirements)) {
+            $_SESSION['upload_errors'] = ["No files submitted."];
         header("Location: upload_document.php?request=$id");
         exit();
+    }
+
+        
     }
 
     if ($files) {
@@ -223,6 +228,12 @@ if ($_SESSION['docType'] == 'senior' || $_SESSION['docType'] == 'relative') {
         }
     }
 }
+
+if (empty($requirements)) {
+    echo '<li>No requirements for this document. Please proceed to the next step.</li>';
+}
+
+
 ?>
                     </ul>
                 <div class="bottom doc-btns">

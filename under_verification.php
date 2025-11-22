@@ -40,7 +40,7 @@ mysqli_close($conn);
     <header class="main-header">
         <div class="logo">
         <img src="./images/logo.png">
-        <div>
+        <div>   
             <h4>BRGY. Townsville</h4>
             <h4>Document Request</h4>
         </div>
@@ -63,7 +63,7 @@ mysqli_close($conn);
                         <p class="greeting">Hello, <b><?php echo htmlspecialchars($givenname); ?></b>.</p>
             <?php if (isset($_GET['denied'])){
                     echo '<p style="margin-bottom:12px;" >Your registration has been denied.';
-                    echo '<p style="margin-bottom:12px;"><b>Reason: '. $comment. '</b></p>';
+                    echo '<p style="margin-bottom:17px;"><b>Reason: '. $comment. '</b></p>';
                     echo '<a class="request-btn" href="edit_submission.php?id='.$id.'">Edit Submission</a>';
                     
                     

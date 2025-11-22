@@ -1,17 +1,9 @@
-
-<?php 
+<?php
 session_start();
-
 include "db.php";
 
 if (!isset($_SESSION['email'])) {
-    // Redirect to the login page if not logged in
     header("Location: index.php");
-    exit();
-}
-
-if ($_SESSION['is_verified'] == 0 && $_SESSION['type'] == 'user') {
-    header("Location: under_verification.php"); 
     exit();
 }
 
@@ -20,64 +12,110 @@ if (isset($_GET['request'])) {
     
 } 
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SESSION['is_verified'] == 0 && $_SESSION['type'] == 'user') {
+    header("Location: under_verification.php"); 
+    exit();
+}
 
-    //Check if there are uploaded files
-    if (empty($_FILES['fileupload']['name'][0])) {
-        header("Location: upload_document.php?request=$id&error=no_file");
+// Determine next parameters
+$nextparameters = '';
+switch($_SESSION['docType']) {
+    case 'own': $nextparameters='&own'; break;
+    case 'senior': $nextparameters='&others=senior'; break;
+    case 'relative': $nextparameters='&others=relative'; break;
+    default: $nextparameters='&others';
+}
+
+if (!isset($_SESSION['fileupload'])) {
+    $_SESSION['fileupload'] = [];
+}
+
+$req_names = [];
+$sql = "SELECT req_id, req_name FROM requirements";
+$result = mysqli_query($conn, $sql);
+if ($result) {
+    while ($row = mysqli_fetch_row($result)) {
+        $req_id = $row[0];  
+        $req_name = $row[1]; 
+        $req_names[$req_id] = $req_name;
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    $errors = [];
+    $files = $_FILES['fileupload'] ?? null;
+
+    // Check if any file was selected
+    $hasFiles = false;
+    foreach (($files['name'] ?? []) as $name) {
+        if (!empty($name)) $hasFiles = true;
+    }
+
+    if (!$hasFiles) {
+        $_SESSION['upload_errors'] = ["No files submitted."];
+        header("Location: upload_document.php?request=$id");
         exit();
     }
 
-    // Loop through each uploaded file
-    foreach ($_FILES['fileupload']['name'] as $document => $file_name) {
+    foreach (($files['name'] ?? []) as $req_id => $name) {
 
-        // Reject uploaded file larger than 5MB
-        if ($_FILES["fileupload"]["size"][$document] > 5242880) { // 5MB limit
-            header("Location: upload_document.php?request=$id&error=large");
-            exit;
+        $processFile = true; // flag to check if file should be saved
+
+        $tmp_name = $files['tmp_name'][$req_id] ?? null;
+        $size = $files['size'][$req_id] ?? 0;
+
+        // Check for empty file
+        if (empty($name)) {
+            $req_name = $req_names[$req_id] ?? "Unknown Requirement";
+            $errors[] = "No file submitted for \"$req_name\".";
+            $processFile = false;
         }
 
-        // Use fileinfo to get the mime type and reject unaccepted file types
-        $finfo = new finfo(FILEINFO_MIME_TYPE);
-        $mime_type = $finfo->file($_FILES["fileupload"]["tmp_name"][$document]);
-        $mime_types = ["application/pdf", "image/png", "image/jpeg"];
-        if (!in_array($mime_type, $mime_types)) {
-            header("Location: upload_document.php?request=$id&error=invalid");
-            exit;
+
+        // Check size (5MB max for example)
+        if ($size > 5242880) {
+            $errors[] = "File \"$name\" is too large (max 5MB).";
+            $processFile = false;
         }
 
-        // Replace any characters not \w- in the original filename
-        $pathinfo = pathinfo($file_name);
-        $base = preg_replace("/[^\w-]/", "_", $pathinfo["filename"]);
-        $filename = $base . "." . $pathinfo["extension"];
-
-        // Check if the file already exists and add a number if it does
-        $upload_dir = 'documents/';
-        $target_file = $upload_dir . $filename;
-        $i = 1;
-        while (file_exists($target_file)) {
-            // If the file exists, append number to the filename
-            $filename = $base . "($i)." . $pathinfo["extension"];
-            $target_file = $upload_dir . $filename;
-            $i++;
+        // Check MIME type
+        if ($processFile && $tmp_name) {
+            $finfo = new finfo(FILEINFO_MIME_TYPE);
+            $mime = $finfo->file($tmp_name);
+            $allowed = ["application/pdf", "image/png", "image/jpeg", "image/pjpeg"];
+            if (!in_array($mime, $allowed)) {
+                $errors[] = "File \"$name\" has invalid type.";
+                $processFile = false;
+            }
         }
 
-        // Move the uploaded file to the target directory
-        if (move_uploaded_file($_FILES["fileupload"]["tmp_name"][$document], $target_file)) {
-            // Save the file path in the session
-            $_SESSION['fileupload'][] = $filename; // Store multiple filenames
-        } else {
-            echo "Error uploading file.";
+       
+        if ($processFile && $tmp_name) {
+            $pathinfo = pathinfo($name);
+            $base = preg_replace("/[^\w-]/", "_", $pathinfo["filename"]);
+            $filename = $base . "." . $pathinfo["extension"];
+
+            // Save in session
+            $_SESSION['fileupload'][] = [
+                'request_id' => $id,
+                'req_id' => $req_id,
+                'file_name' => $filename,
+                'tmp_name' => $tmp_name // need for request submission
+            ];
         }
     }
 
-    // Redirect to the next page
-    header('Location: shipping.php?request='. $id); // Redirect to the next page after successful upload
-    exit;
+    if (!empty($errors)) {
+        $_SESSION['upload_errors'] = $errors;
+        header("Location: upload_document.php?request=$id");
+        exit();
+    }
+    
+    header("Location: shipping.php?request=$id");
+    exit();
 }
 
-
-$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -110,91 +148,65 @@ $conn->close();
     </header>
 
 
-    <div class="main-page">
-       <div class="form-box register-box valid-id">
+    <div class="main-page adjust-spacing">
+       
+        <?php
+if (!empty($_SESSION['upload_errors'])) {
+    foreach ($_SESSION['upload_errors'] as $err) {
+        echo '<div class="error-container">';
+        echo '<img src="./images/warning.png">';
+        echo "<p>$err</p>";
+        echo '</div>';
+    }
+    unset($_SESSION['upload_errors']);
+}
+?>
+
+
+       <div class="form-box request-box valid-id">
                 
                 <h1>Upload Documents</h1>
                 <form action="upload_document.php?request=<?php echo $id; ?>" enctype="multipart/form-data" method="POST">
-                <div class="top">
-                    <div class="left">
-
-                    <h2>Instructions for Uploading Your Documents</h2>
-                    <ul>
-                        <li>The entire file <b>must be visible</b> (not cropped or cut off).</li>
-                        <li>Make sure the image is <b>clear and not blurry.</b></li>
-                        <li>The following details must be clearly readable:
-                            <ul class="lighter">
-                                <li>Full Name</li>
-                                <li>Photo</li>
-                                <li>Birthdate</li>
-                                <li>Area of residency</li>
-                            </ul>
-                        </li>
-                        <li>Avoid using filters or altering the image.</li>
-                        <li>Accepted file formats: <b>JPG, PNG, or PDF</b></li>
-                        <li>Maximum file size for each document: <b>5MB</b></li>  
-                    </ul>
-                    
-                    <label>Upload Image</label>
-                    <input type="file" id="myFile" name="fileupload[]" accept=".jpg,.png,.pdf" multiple>
-
-                    </div>
-
-                    <div class="right">
-                    <h2>Requirements</h2>
+                
+                <h2>Requirements</h2>
                     <ul>
                         <?php
+$sql = "SELECT req_id, req_name
+        FROM requirements
+        WHERE req_id IN (SELECT req_id FROM doc_type_requirements WHERE doc_id = $id)";
 
-                            include "db.php"; 
+$result = mysqli_query($conn, $sql);
 
-                            if (isset($_GET['request'])) {
-                                $id = $_GET['request'];     
-                            
+$requirements = []; // store requirement IDs and names 
 
-                            $sql = "SELECT r.req_name
-                                    FROM doc_type_requirements dtr
-                                    JOIN requirements r ON dtr.req_id = r.req_id
-                                    WHERE dtr.doc_id = $id";
-
-                            $result = mysqli_query($conn, $sql);
-
-                           
-
-                            if (mysqli_num_rows($result) > 0) {
-                                while ($row = mysqli_fetch_row($result)) {
-                                    // Fetch req_name
-                                    echo "<li>".$row[0] . "</li>"; 
-                                }
-                            } else {
-                                echo "No requirements found for this document ID.";
-                            }
-                            }
-                            mysqli_close($conn);
-                        ?> 
-                    </ul>              
-
-                        <div class="message-container <?php if (isset($_GET['error'])) { echo 'visible'; }?>">
-
-                            <img src="./images/warning.png">
-                            <p>
-                                <?php
-                                    if (isset($_GET['error']) && $_GET['error'] == 'large') {
-                                        echo '<p>File is too large (max: 5MB).</p>';
-                                    } elseif (isset($_GET['error']) && $_GET['error'] == 'invalid') {
-                                        echo '<p>Invalid file type.</p>';
-                                    }
-                                    elseif (isset($_GET['error']) && $_GET['error'] == 'no_file') {
-                                        echo '<p>No files submitted.</p>';
-                                    }
-                                ?>
-                            </p>
-                        </div>
-                    </div>
-
-                </div>
-                
+ if ($result->num_rows > 0){
+    while ($row = mysqli_fetch_row($result)) { 
+        $req_id = $row[0];   
+        $req_name = $row[1]; 
+        $requirements[$req_id] = $req_name;
+        echo "<li>$req_name<br>
+              <input type='file' name='fileupload[$req_id]' accept='.jpg,.png,.pdf'>
+              </li>";
+    }
+}
+// Add additional requirements for seniors or relatives
+if ($_SESSION['docType'] == 'senior' || $_SESSION['docType'] == 'relative') {
+    $extra_req_ids = [4, 5, 6];
+    foreach ($extra_req_ids as $req_id) {
+        $res = mysqli_query($conn, "SELECT req_name FROM requirements WHERE req_id = $req_id ");
+        if ($row = mysqli_fetch_row($res)) {
+            $req_name = $row[0]; 
+            $requirements[$req_id] = $req_name;
+            echo "<li>$req_name<br>
+                  <input type='file' name='fileupload[$req_id]' accept='.jpg,.png,.pdf'>
+                  </li>";
+        }
+    }
+}
+?>
+                    </ul>
                 <div class="bottom doc-btns">
-                    <a href="document_details.php?view=<?php echo $id; ?>" class="back-btn">Previous</a>
+                    <a href="request_for.php?request=<?php echo $id.$nextparameters;?>" class="back-btn">Previous</a>
                     <button type="submit">Next</button>
                 </div>
 

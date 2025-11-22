@@ -19,6 +19,23 @@ if (isset($_GET['request'])) {
     $id = $_GET['request'];
     
 } 
+
+$nextparameters='';
+
+if($_SESSION['docType'] == 'own')
+{
+    $nextparameters='&own';
+} elseif($_SESSION['docType'] == 'senior')
+{
+    $nextparameters='&others=senior';
+}
+elseif($_SESSION['docType'] == 'relative')
+{
+    $nextparameters='&others=relative';
+}else{
+    $nextparameters='&others';
+}
+
 $conn->close();
 ?>
 
@@ -53,9 +70,9 @@ $conn->close();
 
 
     <div class="main-dashboard">
-        <div class="user-container">
-
-        <h2 class="select-title">Please select a delivery option</h2>
+        <div class="select-title">
+            <h2><a href="upload_document.php?request=<?php echo $id.$nextparameters;?>"><b><-</b></a></h2>
+            <h2>Please select a delivery option</h2>
         </div>
         <table class="deliveryoptions">
             <tr>

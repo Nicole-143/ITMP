@@ -100,7 +100,7 @@ $conn->close();
 
                 <div class="bottom doc-btns">
                     <a href="dashboard.php" class="back-btn">Back to Home</a>
-                    <a href="upload_document.php?request=<?php echo $id; ?>" class="request-btn">Request to Document</a>
+                    <a href="request_for.php?request=<?php echo $id; ?>" class="request-btn">Request to Document</a>
                 </div>
         </div>
 </div>

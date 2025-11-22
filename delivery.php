@@ -24,13 +24,32 @@ if (isset($_GET['pickup'])) {
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    // Redirect to the next page
-    header('Location: payment.php?pay='. $id); // Redirect to the next page after successful upload
-    exit;
+    $user_id = $_SESSION['id'];  // from session
+    $doc_id = $id;                     // from GET
+    $request_date = date("Y-m-d H:i:s");
+    $status = 'pending';
+    $delivery_mode = isset($_GET['pickup']) ? 'Pick-up' : 'Delivery';
+    $shipping_fee = ($delivery_mode == 'Delivery') ? 30 : 0;
+    $is_on_behalf = 0;
+    $payment_status = 'Pending';
+    $shipping_date = 'NULL';
+    $arrival_date = 'NULL';
+
+    $sql = "INSERT INTO requests 
+        (user_id, doc_id, request_date, status, delivery_mode, shipping_fee, is_on_behalf, payment_status, shipping_date, arrival_date)
+        VALUES
+        ('$user_id', '$doc_id', '$request_date', '$status', '$delivery_mode', '$shipping_fee', '$is_on_behalf', '$payment_status', $shipping_date, $arrival_date)";
+
+    if (mysqli_query($conn, $sql)) {
+        // Redirect to payment page
+        header('Location: payment.php?pay='. $doc_id);
+        exit;
+    } else {
+        echo "Error: " . mysqli_error($conn);
+    }
 }
 
-
-$conn->close();
+mysqli_close($conn);
 ?>
 
 <!DOCTYPE html>
@@ -144,6 +163,10 @@ $conn->close();
     </div>
     ';
 } 
+
+else if (isset($_GET['checkout'])){
+    
+}
     ?>
 </body>
 </html>

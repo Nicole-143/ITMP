@@ -1,20 +1,30 @@
 <?php
-session_start();
 
-// added by Khloe Nov 8 please check everything
+session_start();
+include "db.php";
 
 if (!isset($_SESSION['email'])) {
     header("Location: index.php");
     exit();
 }
 
-// Checks if theyre verified
-if ($_SESSION['is_verified'] == 1) {
+// If the account is denied (has a comment)
+if (!empty($_SESSION['comment']) && !isset($_GET['denied'])) {
+    header("Location: under_verification.php?denied");
+    exit();
+}
+
+// If account is verified
+if (!empty($_SESSION['is_verified']) && $_SESSION['is_verified'] == 1) {
     header("Location: dashboard.php");
     exit();
 }
 
 $givenname = $_SESSION['givenname'];
+$comment = $_SESSION['comment'];
+$id = $_SESSION['id'];
+
+mysqli_close($conn);
 ?>
 
 <!DOCTYPE html>
@@ -51,8 +61,21 @@ $givenname = $_SESSION['givenname'];
                     
                         <h2>Account Under Verification</h2>
                         <p class="greeting">Hello, <b><?php echo htmlspecialchars($givenname); ?></b>.</p>
-            <p>Your registration is currently being reviewed by the Barangay Admin. You will not be able to request documents until your account is approved.</p>
-            <p>Please check back later.</p>
+            <?php if (isset($_GET['denied'])){
+                    echo '<p style="margin-bottom:12px;" >Your registration has been denied.';
+                    echo '<p style="margin-bottom:12px;"><b>Reason: '. $comment. '</b></p>';
+                    echo '<a class="request-btn" href="edit_submission.php?id='.$id.'">Edit Submission</a>';
+                    
+                    
+            }
+            else{
+                echo '<p>Your registration is currently being reviewed by the Barangay Admin. You will not be able to request documents until your account is approved.</p>';
+                echo '<p>Please check back later.</p>';
+            }
+            ?>
+               
+        </div>
+        
                    
         </div>
 

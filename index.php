@@ -25,7 +25,13 @@ if (isset($_POST['submit'])) {
         $_SESSION['givenname'] = $user['givenname'];
         $_SESSION['type'] = $user['type'];             
         $_SESSION['is_verified'] = $user['is_verified'];
+         $_SESSION['comment']= $user['comment'];
 
+        if($user['is_verified'] == 0)
+        {
+            header("Location: under_verification.php");
+            exit();
+        }
 
         if($user['type'] == 'admin')
         {
@@ -43,7 +49,7 @@ if (isset($_POST['submit'])) {
         header("Location: index.php?error");
         exit();
     }
-}
+}   
 
 // Close the database connection
 $conn->close();
@@ -99,7 +105,7 @@ $conn->close();
                             <label>Password</label><br>
                             <input type="password" name="password" placeholder="Password" required><br>
                             <button type="submit" name="submit">Login</button>
-                            <p><b>Not a member? <a href="register.php" onclick="">Sign up now</a></b></p>
+                            <p><b>Not a member? <a href="register.php">Sign up now</a></b></p>
                         </form>
                    
         </div>

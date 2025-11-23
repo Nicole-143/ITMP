@@ -89,8 +89,8 @@ if ($_SESSION['type'] == 'user') {
                             echo "<td>" . $surname . " , " . $givenname . " " . $middleinitial . ". "."</td>";
                             echo "<td>" . $email . "</td>";
                             echo "<td>" . $registerdate . "</td>";
-                            echo "<td class='action-btn'>
-                                <a href='view_id.php?view=" . $id . "' class='view-btn'>View Details</a>   
+                            echo "<td >
+                                <a href='view_id.php?view=" . $id . "' class='action-btn'>View Details</a>   
                                 </td>";
                             echo "</tr>";
                             

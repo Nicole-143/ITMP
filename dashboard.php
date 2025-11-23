@@ -46,6 +46,7 @@ $conn->close();
             <li>About</li>
             <li>FAQS</li>
             <li><a href="dashboard.php">Home</a></li>
+            <li><a href="view_wallet.php">Wallet</a></li> 
             <li><a href="track_request.php">Track Requests</a></li> 
             <li><a href="logout.php" onclick="">Logout</a></li>
         </ul>

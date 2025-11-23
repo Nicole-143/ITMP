@@ -96,11 +96,15 @@ $docType = $_SESSION['docType'] ?? '';
                 $update_wallet_sql = "UPDATE wallet SET balance = $new_balance WHERE user_id = $user_id";
                 $update_result = mysqli_query($conn, $update_wallet_sql);
 
-                 if ($update_result) {
-                     $_SESSION['wallet_balance'] = $new_balance;
-                 }
+                 
+               
+                        if ($update_result) {
+                           
+                            unset($_SESSION['top-up']); 
+                            
+                        } 
 
-                $subtotal = ($_SESSION['total']*$_SESSION['copies'])+$_SESSION['shipping_fee'];  
+                $subtotal = $_SESSION['total']+$_SESSION['shipping_fee'];  
                 $remaining_balance = $new_balance - $subtotal;  
 
                 echo '
@@ -191,7 +195,7 @@ $docType = $_SESSION['docType'] ?? '';
 
                         if ($update_result) {
                             $_SESSION['payment_mode']='Wallet';
-                            $_SESSION['wallet_balance'] = $new_balance_after_payment;
+                            unset($_SESSION['top-up']); 
                             header("Location: request.php?process&pay=$id");
                             exit;
                         } else {

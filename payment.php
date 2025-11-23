@@ -81,7 +81,9 @@ $conn->close();
     </nav>
     </header>
 
-
+<?php echo '<pre>';
+        print_r($_SESSION); // or var_dump($_SESSION);
+    echo '</pre>';?>
     <div class="main-page">
          
        <div class="form-box payment-box valid-id">

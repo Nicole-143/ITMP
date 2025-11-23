@@ -24,7 +24,7 @@ if (isset($_GET['pay'])) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $copies = $_POST['copies'];
     $_SESSION['copies'] = $copies;
-
+    
     header("Location: checkout_confirm.php?pay=" . $id); 
         exit();
    

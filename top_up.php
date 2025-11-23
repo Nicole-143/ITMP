@@ -39,8 +39,8 @@ $docType = $_SESSION['docType'] ?? '';
 include "db.php";
 
 if( $_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_GET['top-up'])) {
-    $_SESSION['top-up'] = $_POST['topup_amount'];
+
+    if (isset($_GET['card'])) {    
     $id = isset($_GET['pay']);
 
     header("Location: wallet_payment.php?pay=$id");
@@ -98,7 +98,7 @@ mysqli_close($conn);
                 <?php
             
                 $user_id = $_SESSION['id'];
-                $top_up = $_SESSION['top-up']?? 0;
+                $top_up = $_SESSION['top-up'];
 
                 echo '
 
@@ -146,7 +146,7 @@ mysqli_close($conn);
                 }
                 else if (isset($_GET['card'])){
                     echo'
-                    <form id="payment-form" action="top_up.php?pay='.$id.'&gcash" method="POST">
+                    <form id="payment-form" action="top_up.php?pay='.$id.'&card" method="POST">
                 
                     <h2 class="card bottom-space">Card Payment Details </h2>
                     <label>Email Address</label><br>
@@ -173,9 +173,11 @@ mysqli_close($conn);
                 }
                 ?>
 
-                    <a href="wallet_payment.php?pay=<?php echo $id; ?>" class="back-btn">Previous</a>
+                    <a href="wallet.php?pay=<?php echo $id; ?>" class="back-btn">Previous</a>
                 </div>
                 </form>
+
+                 
     </div>
 </body>
 </html>

@@ -27,9 +27,12 @@ if (isset($_GET['own'])) {
         $_SESSION['docType'] = 'senior';
     } elseif ($_GET['others'] == 'relative') {
         $_SESSION['docType'] = 'relative';
+        
     } else {
         $_SESSION['docType'] = 'others';
+       
     }
+    $_SESSION['on_behalf'] = 1;
 }
 
 // Get selection for highlighting and next button

@@ -1154,3 +1154,41 @@ p.bottom-space{
 .top-spacer{
     margin-top:30px;
 }
+
+/*Track Request Styles*/
+
+.user-table{
+    margin-top:20px;
+    border-collapse: collapse;
+    width:100%;
+}
+
+
+.user-table th, .user-table td{
+    border: 1px solid var(--header-color); 
+    padding: 8px; 
+    text-align:center;
+    
+}
+
+.user-table .head th{
+    background-color: var(--header-color);
+    color:white;
+}
+
+.user-table tr:nth-child(odd) {
+  background-color: #B7CFFF;
+}
+
+.user-table tr:nth-child(even) {
+  background-color: #EEEEEE;
+}
+
+.not-found{
+    text-align:center;
+    font-size:20px;
+    border:1px solid var(--header-color); 
+    margin-top:20px;
+    padding:10px;
+    background-color: #B7CFFF;
+}

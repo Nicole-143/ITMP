@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     
     $_SESSION['copies'] = $copies;
-    $_SESSION['on_behalf'] = $_POST['on-behalf'] ?? '';
+    
 
     $total = $copies * $price;
      $_SESSION['shipping_fee']=$shipping_fee;

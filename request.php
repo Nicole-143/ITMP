@@ -20,16 +20,24 @@ if (isset($_GET['process'])) {
     $status = 'Pending';
     $delivery_mode = ($_SESSION['delivery_mode']=='Pick-up') ? 'Pick-up' : 'Delivery';
     $copies=$_SESSION['copies'];
-    $payment_mode = '';
+    $payment_mode = 'NULL';
     
-    if (!isset($_SESSION['payment_mode'])){
-        $payment_mode = 'NULL';
-    }else{
-        $payment_mode = ($_SESSION['payment_mode']=='Cash_On_Delivery')? 'Cash_On_Delivery' : 'Wallet';;
+    if (($_SESSION['payment_mode']=='Cash_On_Delivery')){
+        $payment_mode = 'Cash_On_Delivery';
+    }else if ($_SESSION['payment_mode']=='Wallet'){
+        $payment_mode = 'Wallet';;
     }
     $shipping_fee = $_SESSION['shipping_fee'];
     $is_on_behalf = $_SESSION['on_behalf']? 1 : 0;
-    $payment_status = 'Pending';
+
+    if (($_SESSION['delivery_mode']=='Pick-up')|| ($_SESSION['payment_mode']=='Cash_On_Delivery'))
+    {
+        $payment_status = 'Pending';
+    }
+    else{
+        $payment_status = 'Paid';
+    }
+    
     $shipping_date = 'NULL';
     $arrival_date = 'NULL';
 

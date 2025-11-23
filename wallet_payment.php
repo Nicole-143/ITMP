@@ -58,7 +58,7 @@ $docType = $_SESSION['docType'] ?? '';
             <li>FAQS</li>
             <li><a href="dashboard.php">Home</a></li>
             <li><a href="track_request.php">Track Requests</a></li> 
-            <li><a href="logout.php" onclick="">Logout</a></li>
+            <li><a href="logout.php">Logout</a></li>
         </ul>
     </nav>
     </header>
@@ -90,20 +90,37 @@ $docType = $_SESSION['docType'] ?? '';
                     $row = mysqli_fetch_row($result);;
                     $wallet_balance = $row[0];
                 }
-
+                
                 $new_balance = $wallet_balance + $top_up;
-               
+                $payment_date = date("Y-m-d H:i:s");
+                $transaction_type = 'Wallet Load';
+
+                if ($top_up != 0)
+                { 
                 $update_wallet_sql = "UPDATE wallet SET balance = $new_balance WHERE user_id = $user_id";
                 $update_result = mysqli_query($conn, $update_wallet_sql);
-
-                 
-               
+        
                         if ($update_result) {
-                           
-                            unset($_SESSION['top-up']); 
-                            
-                        } 
 
+                            $request_id='NULL';
+                           
+                            $sql_payment_record = "INSERT INTO payments (user_id, amount, payment_date, transaction_type)
+                                VALUES ('$user_id', '$top_up', '$payment_date','$transaction_type')";
+                        
+                            $payment_result = mysqli_query($conn, $sql_payment_record);
+
+                            // Check if payment was successfully inserted
+                            if ($payment_result) {
+                                // Unset the session top-up after successful payment
+                                unset($_SESSION['top-up']);
+                            } else {
+                                echo "<p>Error inserting payment record.</p>";
+                            }
+                            
+                        } else {
+                    echo "<p>Error updating wallet balance.</p>";
+                }
+            }
                 $subtotal = $_SESSION['total']+$_SESSION['shipping_fee'];  
                 $remaining_balance = $new_balance - $subtotal;  
 
@@ -190,10 +207,10 @@ $docType = $_SESSION['docType'] ?? '';
                         
                         $new_balance_after_payment = $remaining_balance;
 
-                        $update_wallet_sql = "UPDATE wallet SET balance = $new_balance_after_payment WHERE user_id = $user_id";
-                        $update_result = mysqli_query($conn, $update_wallet_sql);
+                        $update_new_wallet_sql = "UPDATE wallet SET balance = $new_balance_after_payment WHERE user_id = $user_id";
+                        $update_sql_result = mysqli_query($conn, $update_new_wallet_sql);
 
-                        if ($update_result) {
+                        if ($update_sql_result) {
                             $_SESSION['payment_mode']='Wallet';
                             unset($_SESSION['top-up']); 
                             header("Location: request.php?process&pay=$id");

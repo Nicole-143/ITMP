@@ -166,7 +166,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <li>FAQS</li>
             <li><a href="dashboard.php">Home</a></li>
             <li><a href="track_request.php">Track Requests</a></li> 
-            <li><a href="logout.php" onclick="">Logout</a></li>
+            <li><a href="logout.php">Logout</a></li>
         </ul>
     </nav>
     </header>

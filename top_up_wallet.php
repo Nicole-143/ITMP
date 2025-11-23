@@ -15,25 +15,6 @@ if ($_SESSION['is_verified'] == 0 && $_SESSION['type'] == 'user') {
     exit();
 }
 
-if (isset($_GET['pay'])) {
-    $id = $_GET['pay'];
-    
-} 
-
-if (isset($_GET['own'])) {
-    $_SESSION['docType'] = 'own';
-} elseif (isset($_GET['others'])) {
-    if ($_GET['others'] == 'senior') {
-        $_SESSION['docType'] = 'senior';
-    } elseif ($_GET['others'] == 'relative') {
-        $_SESSION['docType'] = 'relative';
-    } else {
-        $_SESSION['docType'] = 'others';
-    }
-}
-
-// Get selection for highlighting and next button
-$docType = $_SESSION['docType'] ?? '';
 
 
 include "db.php";
@@ -41,9 +22,9 @@ include "db.php";
 if( $_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (isset($_GET['card'])) {    
-    $id = isset($_GET['pay']);
+    
 
-    header("Location: wallet_payment.php?pay=$id");
+    header("Location: view_wallet.php?payment");
     exit;
     }
 }
@@ -56,6 +37,11 @@ if (isset($_GET['card'])) {
     $paymenttype = 'gcash';
 }
 
+if (isset($_GET['previous'])) {
+    unset($_SESSION['update_topup']); // Clear the session variable
+    header("Location: view_wallet.php");
+    exit;
+}
 
 mysqli_close($conn);
 
@@ -85,7 +71,7 @@ mysqli_close($conn);
             <li>FAQS</li>
             <li><a href="dashboard.php">Home</a></li>
             <li><a href="track_request.php">Track Requests</a></li> 
-            <li><a href="logout.php" onclick="">Logout</a></li>
+            <li><a href="logout.php">Logout</a></li>
         </ul>
     </nav>
     </header>
@@ -98,7 +84,7 @@ mysqli_close($conn);
                 <?php
             
                 $user_id = $_SESSION['id'];
-                $top_up = $_SESSION['top-up'];
+                $update_topup = $_SESSION['update_topup'];
 
                 echo '
 
@@ -108,7 +94,7 @@ mysqli_close($conn);
                 <h1 class="top-space">Top-Up: </h1>
                 </div>
                 <div class="right align-right">
-                <h1 class="top-space">₱  '.number_format($top_up,2).'</h1>
+                <h1 class="top-space">₱  '.number_format($update_topup,2).'</h1>
                 </div>
 
                 </div>
@@ -122,10 +108,10 @@ mysqli_close($conn);
                 
                 <p class="choosepayment">Choose payment method</p>
                 <div class="select-request options">
-                    <a href="top_up.php?pay=<?php echo $id; ?>&card" 
+                    <a href="top_up_wallet.php?card" 
                     <?php if($paymenttype === 'card'){ echo 'style="background-color: #BDE0F2;"'; } ?>
                     >Credit Card / Debit Card</a>
-                    <a href="top_up.php?pay=<?php echo $id; ?>&gcash"
+                    <a href="top_up_wallet.php?gcash"
                     <?php if($paymenttype === 'gcash'){ echo 'style="background-color: #BDE0F2;"'; } ?>
                     >GCash</a>
                 </div>
@@ -141,12 +127,12 @@ mysqli_close($conn);
                     <img class="qr bottom-space" src="./images/payment-qr.png">
                     <div class="line bottom-space"></div>
                     <div class="select-request top-space">
-                        <a href="wallet_payment.php?pay='.$id.'" class="request-btn">Next</a>
+                        <a href="view_wallet.php?payment" class="request-btn">Pay Top-Up</a>
                     ';
                 }
                 else if (isset($_GET['card'])){
                     echo'
-                    <form id="payment-form" action="top_up.php?pay='.$id.'&card" method="POST">
+                    <form id="payment-form" action="top_up_wallet.php?card" method="POST">
                 
                     <h2 class="card bottom-space">Card Payment Details </h2>
                     <label>Email Address</label><br>
@@ -167,13 +153,13 @@ mysqli_close($conn);
                     </div>
                     <div class="select-request top-space">
                     <div class="line bottom-space"></div>
-                                <button type="submit">Next</button>
+                                <button type="submit">Pay Top-Up</button>
                                 </form>';
                     
                 }
                 ?>
 
-                    <a href="wallet.php?pay=<?php echo $id; ?>" class="back-btn">Previous</a>
+                    <a href="top_up_wallet.php?previous=true" class="back-btn">Previous</a>
                 </div>
                 </form>
 

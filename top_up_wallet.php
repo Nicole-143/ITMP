@@ -159,7 +159,7 @@ mysqli_close($conn);
                 }
                 ?>
 
-                    <a href="top_up_wallet.php?previous=true" class="back-btn">Previous</a>
+                    <a href="top_up_wallet.php?previous=true" class="back-btn">Cancel</a>
                 </div>
                 </form>
 

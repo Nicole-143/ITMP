@@ -36,7 +36,7 @@ if (isset($_GET['pay'])) {
 
 $delivery_mode = $_SESSION['delivery_mode'];
 
-
+$_SESSION['price'] = $price;
 $copies = $_SESSION['copies'];
 $total = $copies*$price;
 
@@ -95,8 +95,10 @@ $conn->close();
 
 
     <div class="main-page">
+       
+
        <div class="form-box request-box valid-id">       
-      
+                
                 <h1>Checkout</h1>
                 <p class="reminder-content title">Reminder:</p>
                 <p class="reminder-content">Avoid transacting with online scammers! Barangay Townsville <b>DOES NOT</b> coordinate transactions and payment through FB messenger. No additional fees will be charged aside from what is indicated on your order.</p>

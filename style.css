@@ -1023,3 +1023,134 @@ textarea:focus {
     margin-top:20px;
     width:70px;
 }
+
+/*Payment Styles*/
+
+.payment-box {
+    margin-top:30px;
+    max-width:630px;
+    display:flex;   
+    padding:50px;
+    height: auto;
+}
+
+.payment-box h1{
+    font-size:25px;
+    color:#14449D;
+    text-align: left;
+    
+}
+
+
+.line{
+    width: 100%;
+    height: 1px;
+    background-color: #505050; 
+    
+}
+
+.top-space{
+    margin-top:20px;
+}
+
+.bottom-space{
+    margin-bottom:20px;
+}
+
+p.bottom-space{
+    font-size:16px;
+    color:#505050;
+}
+
+.view-container{
+    display:flex;
+    justify-content: space-around;
+    
+}
+
+.align-right h1{
+    text-align: right;
+}
+
+.fee-display td:first-child {
+    text-align: left; 
+}
+
+.fee-display td:last-child {
+    text-align: right; 
+}
+
+.back-btn.top-space{
+    margin-top:10px;
+}
+
+/*My Wallet*/
+
+.top-up-title{
+    margin-top:20px;
+    text-align: left;
+    margin-bottom:20px;
+}
+
+.amount-container{
+    display:flex;
+    justify-content: space-around;
+    
+    
+}
+
+
+.amount-container .left h2{
+    text-align: left;
+    margin:0;
+}
+
+
+.left{
+    margin:0;
+}
+
+.view-container .right h2{
+    text-align:right;
+}
+
+
+
+.choosepayment{
+    font-size:20px;
+}
+.right input {
+    text-align: right;
+    margin:0px 0px;
+}
+
+.line.bottom-space{
+    margin-bottom: 20px; 
+}
+
+.line.bottom-spacer{
+    margin-top:30px;
+    margin-bottom: 40px; 
+}
+
+.two-parts{
+    display:flex;
+    justify-content: space-between;
+}
+
+.card.bottom-space{
+    margin-top:0px;
+}
+
+.choosepayment.top-space.align-center {
+    text-align: center; 
+    display: flex;   
+    justify-content: center; 
+    align-items: center; 
+    width: 100%; 
+    height: auto; 
+}
+
+.top-spacer{
+    margin-top:30px;
+}

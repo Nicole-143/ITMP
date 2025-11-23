@@ -17,8 +17,16 @@ if (isset($_GET['process'])) {
     $user_id=$_SESSION['id'];
     $doc_id=$id;
     $request_date = date("Y-m-d H:i:s");
-    $status = 'pending';
-    $delivery_mode = $_SESSION['delivery_mode'] ? 'Pick-up' : 'Delivery';
+    $status = 'Pending';
+    $delivery_mode = ($_SESSION['delivery_mode']=='Pick-up') ? 'Pick-up' : 'Delivery';
+    $copies=$_SESSION['copies'];
+    $payment_mode = '';
+    
+    if (!isset($_SESSION['payment_mode'])){
+        $payment_mode = 'NULL';
+    }else{
+        $payment_mode = ($_SESSION['payment_mode']=='Cash_On_Delivery')? 'Cash_On_Delivery' : 'Wallet';;
+    }
     $shipping_fee = $_SESSION['shipping_fee'];
     $is_on_behalf = $_SESSION['on_behalf']? 1 : 0;
     $payment_status = 'Pending';
@@ -26,14 +34,23 @@ if (isset($_GET['process'])) {
     $arrival_date = 'NULL';
 
     $sql = "INSERT INTO requests 
-        (user_id, doc_id, request_date, status, delivery_mode, shipping_fee, is_on_behalf, payment_status, shipping_date, arrival_date)
+        (user_id, doc_id, request_date, status, delivery_mode, payment_mode, copies, shipping_fee, is_on_behalf, payment_status, shipping_date, arrival_date)
         VALUES
-        ('$user_id', '$doc_id', '$request_date', '$status', '$delivery_mode', '$shipping_fee', '$is_on_behalf', '$payment_status', $shipping_date, $arrival_date)";
+        ('$user_id', '$doc_id', '$request_date', '$status', '$delivery_mode', '$payment_mode', '$copies','$shipping_fee', '$is_on_behalf', '$payment_status', $shipping_date, $arrival_date)";
 
     if (mysqli_query($conn, $sql)) {
 
         //upload files
         $new_request_id = mysqli_insert_id($conn);
+        
+        $amount = $_SESSION['total'] + $_SESSION['shipping_fee']; // total + shipping
+        $payment_date = date("Y-m-d H:i:s");
+        $transaction_type = 'Request Payment';
+        
+        $sql_payment = "INSERT INTO payments (user_id, amount, payment_date, request_id, transaction_type)
+                    VALUES ('$user_id', '$amount', '$payment_date', '$new_request_id', '$transaction_type')";
+    
+        mysqli_query($conn, $sql_payment);
 
         // Insert uploaded documents
         if (!empty($_SESSION['fileupload'])) {
@@ -55,7 +72,7 @@ if (isset($_GET['process'])) {
         }
         // Redirect to payment page
 
-        header("Location: request.php?success"); 
+        header("Location: request.php?success");
         exit();
         
     }

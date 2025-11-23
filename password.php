@@ -34,8 +34,13 @@ include "db.php";
     $insert = "INSERT INTO users (givenname, surname, middlename, email, password, phone, address, sex, birthdate, is_verified, type, upload_id ) 
            VALUES ('$givenname', '$surname', '$middlename', '$email', '$password', '$phone', '$address', '$sex', '$birthdate', 0, 'user','$fileupload')";
 
-    // Execute the query and check if successful
+    
     if (mysqli_query($conn, $insert)) {
+
+        $user_id = mysqli_insert_id($conn);
+        $wallet_sql = "INSERT INTO wallet (user_id, balance) VALUES ('$user_id', '0.00')";
+        mysqli_query($conn, $wallet_sql);
+
         // After insertion, maybe announce muna na registration successful or login ba muna
         header("Location: index.php"); 
     }

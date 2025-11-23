@@ -2,7 +2,7 @@
 <?php 
 session_start();
 
-include "db.php";
+
 
 if (!isset($_SESSION['email'])) {
     // Redirect to the login page if not logged in
@@ -36,20 +36,22 @@ if (isset($_GET['own'])) {
 $docType = $_SESSION['docType'] ?? '';
 
 
-if (isset($_GET['cod'])) {
-    $id = $_GET['pay'];
-    $_SESSION['payment_mode'] = 'Cash_On_Delivery';
-    header("Location: request.php?process&pay=" . $id); 
-    exit();
+include "db.php";
+
+if( $_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_GET['top-up'])) {
+    $_SESSION['top-up'] = $_POST['topup_amount'];
+    $id = isset($_GET['pay']);
+
+    header("Location: top_up.php?pay=$id");
+    exit;
+    }
 }
 
-if (isset($_GET['wallet'])) {
-    $id = $_GET['pay'];
-    $_SESSION['payment_mode'] = 'Wallet';
-    header("Location: wallet.php?pay=" . $id); 
-    exit();
-}
-$conn->close();
+
+
+mysqli_close($conn);
+
 ?>
 
 <!DOCTYPE html>
@@ -87,53 +89,61 @@ $conn->close();
        <div class="form-box payment-box valid-id">
                 
        
-                <h1>Select Payment Option:</h1>
-                <p class="bottom-space">You will not be charged until you review this order on the next page</p>
-
-                <table class="fee-display">
+                <h1>My Wallet</h1>
                 
                 <?php
+                include "db.php";
+                $user_id = $_SESSION['id'];
                 
-                $copies = $_SESSION['copies'];
-                $total=$_SESSION['total'];
-                $shipping_fee=$_SESSION['shipping_fee'];
+                $get_wallet_sql= "SELECT balance FROM wallet WHERE user_id = $user_id ";
+                $result = mysqli_query($conn, $get_wallet_sql);
 
-                echo '<tr>
-                        <td><p class="reminder-content text"><b>Total: </b></p></td>
-                        <td><p class="reminder-content text align-right">₱ '.$total.'.00</p></td>
-                    </tr>';
-                echo '<tr>
-                        <td><p class="reminder-content text "><b>Shipping fee: </b></p></td>
-                        <td><p class="reminder-content text align-right">₱ '.$shipping_fee.'</p></td>
-                    </tr>';
+                $wallet_balance = '0.00'; // default 
 
-                $subtotal=($total+$shipping_fee);
-                ?>
-               
-                </table>
+                if ($result && mysqli_num_rows($result) > 0) {
+                    $row = mysqli_fetch_row($result);;
+                    $wallet_balance = $row[0];
+                }
 
-                <div class="line"></div>
+                
+                echo '
+
                 <div class="view-container">
 
                 <div class="left">
-                <h1 class="top-space">Subtotal: </h1>
+                <h2 class="top-space">Current Balance: </h2>
                 </div>
-                <div class="right  align-right">
-                <h1 class="top-space">₱  <?php echo $subtotal?>.00</h1>
+                <div class="right align-right">
+                <h2 class="top-space">₱  '.$wallet_balance.'</h2>
                 </div>
 
                 </div>
                 
-        <div class="select-request bottom-space">
-            <a href="wallet_payment.php?pay=<?php echo $id?>" class="request-btn">Wallet Payment</a>
-            <a href="payment.php?cod&process&pay=<?php echo $id?>" class="request-btn">Cash on Delivery</a>
-        </div>
+                ';
 
-                <div class="top-space bottom-space">
-                    <div class="line"></div>
+                mysqli_close($conn);
+                ?>
+
+                <div class="line bottom-space top-space" ></div>
+                <form action="wallet.php?top-up&pay=<?php echo $id ?>" method="POST">
+
+                <div class="amount-container">
+
+                <div class="left">
+                <h2>Enter Top-Up Amount: </h2>
+                </div>
+                <div class="right align-right">
+                <input type="number" name="topup_amount" id="topup_amount" min="1" step="0.01" class="top-space align-right" required>
+                </div>
+
                 </div>
                 
-                <a href="checkout_confirm.php?pay=<?php echo $id; ?>" class="back-btn top-space">Previous</a>
+                <div class="line bottom-spacer"></div>
+                <div class="select-request top-space">
+                    <button type="submit" class="request-btn">Top-Up</button>
+                    <a href="payment.php?pay=<?php echo $id; ?>" class="back-btn">Previous</a>
+                </div>
+                </form>
 
     </div>
 </body>

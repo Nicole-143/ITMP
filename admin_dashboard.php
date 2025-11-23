@@ -60,12 +60,13 @@ $conn->close();
         <p>Welcome back, Admin <?php echo htmlspecialchars($givenname); ?>. Manage requests and approvals here.</p>
         <h3>Operations Request</h3>
         <div class="btn-container b1">
-        <a href="#" class="button-style">
+
+        <a href="view_users.php" class="button-style">
         <b>View Users</b>
         <p>Browse and manage registered user accounts, including details and status information.</p>
         </a>
 
-        <a href="#" class="button-style">
+        <a href="view_shipments.php" class="button-style">
         <b>View Shipments</b>
         <p>Access and review shipment records to track delivery status and history.</p>
         </a>

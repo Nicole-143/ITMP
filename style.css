@@ -1192,3 +1192,222 @@ p.bottom-space{
     padding:10px;
     background-color: #B7CFFF;
 }
+
+/* Admin Styles Tables*/
+
+.view-table table{
+    width: 90%;
+    
+    margin: 0 auto;
+    
+    border-collapse: collapse; 
+    border: 2px solid black; 
+    border-radius: 10px;
+    user-select: none;
+}
+
+
+.page-container h2 {
+    margin-bottom: 30px; 
+}
+
+.view-table th{
+    font-weight: bold; 
+    padding: 25px;
+    text-align: center;
+    background-color: #14449D;
+    color: white;
+}
+
+.view-table td{
+    padding: 20px;
+    text-align: center;
+    color: black;
+}
+/* Alternating Row Colors */
+.view-table tr:nth-child(even) td {
+    background-color: #FFFFFF; 
+}
+
+.view-table tr:nth-child(odd) td {
+    background-color: #B7CFFF; 
+}
+
+
+/* --- ADMIN SHIPPING LAYOUT --- */
+
+.shipping-box h1{
+    font-size:25px;
+    color:#000000;
+    text-align: left;
+    width: 100%;
+}
+
+.order-summary{
+    display:flex;   
+    flex-direction: row;
+    gap:20px;
+    table-layout: fixed;
+    justify-content: space-between;
+}
+
+.order-table{
+    
+    width: 1200px;
+    table-layout: fixed;
+    border-collapse: separate;  
+    border-spacing: 0;         
+    font-size:18px;          
+    margin-bottom: 10px;
+    
+    
+}
+
+.order-table th, .order-table td, .item-table th, .item-table td {
+    font-weight:bold;
+    height:63px;      
+    
+}
+
+
+.order-summary .order-table td:first-child {
+    width: 200px; 
+    
+}
+
+.order-table td:nth-child(5){
+    width: 160px; 
+    
+}
+.order-table td:nth-child(4), .order-table td:nth-child(6) {
+    width: 230px; 
+    
+}
+
+
+.items-title{
+    margin-left:-20px;
+    text-align:left;
+}
+.to-right{
+    text-align:right;
+}
+
+.the-right{
+    text-align:right;
+}
+
+.the-right b{
+    margin-right:30px;
+}
+
+.to-right b{
+    
+    margin-right:60px;
+    
+
+}
+.item-table tr{
+    height:63px;
+}
+.item-table{
+    width:500px;
+    
+}
+
+
+.item-summary{
+    display:flex;
+    flex-direction: column;
+    
+}
+
+.form-box.shipping-box table{
+    gap: 10px;
+    border: none;
+    font-size: 20px;
+    
+    width: 100%;
+}
+
+.form-box.shipping-box  td{
+    color: #000000;
+    background-color: transparent;
+    text-align: left;
+    width: auto;
+    
+    white-space: nowrap;
+    padding: 20px;
+}
+
+.total-row td {
+    border-top: 2px solid #999999;
+    padding: 30px; 
+}
+
+.text-blue{
+    color: #2E6BDD;
+    font-weight: 600;
+}
+
+
+.bottom.shipment-btns{
+    
+    display:flex;
+    width: 100%;
+    gap:20px;
+    align-items: flex-end; 
+    justify-content: center;
+    margin-top: 20px;
+}
+.confirm{
+    margin-bottom:10px;
+    color:#B71D1D;
+    font-size:18px;
+}
+
+.confirm-complete{
+    margin-bottom:10px;
+    color: #088329;
+    font-size:18px;
+}
+
+
+.confirm-text{
+    
+    font-size:18px;
+}
+.previous-btn{
+    background-color: #969696;
+    color: #ffffff;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 6px;
+    outline: none;
+    border: none;
+    width: 100%;
+    height: 40px;
+    text-align:center;
+    text-decoration: none;
+}
+
+.action-btn{
+    background-color: var(--header-color);
+    color: #ffffff;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 6px;
+    outline: none;
+    border: none;
+    width: 100%;
+    height: 40px;
+    
+    text-align:center;
+    text-decoration: none;
+}
+
+
+
+.action-btn:hover , .back-btn:hover {
+    background: #93B1E8;
+}

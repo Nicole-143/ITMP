@@ -50,7 +50,7 @@
                 die("Connection failed: " . $conn->connect_error);
             }
             
-            $sql = "";
+            $sql = "SELECT * FROM users";
             $result = $conn->query($sql);
             
             

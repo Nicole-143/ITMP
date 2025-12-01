@@ -84,7 +84,7 @@
                 echo "<td>" . $shipping_date . "</td>";
                 echo "<td>" . $arrival_date . "</td>";
                 echo "<td>
-                <a class='action' href='admin_shipments.php?id=" . $id . "'>View Details</a>
+                <a class='text-blue' href='admin_shipments.php?id=" . $id . "'>View Details</a>
                       </td>";
                 echo "</tr>";
             }

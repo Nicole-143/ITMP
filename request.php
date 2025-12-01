@@ -27,7 +27,7 @@ if (isset($_GET['process'])) {
     }else if ($_SESSION['payment_mode']=='Wallet'){
         $payment_mode = 'Wallet';;
     }
-    $shipping_fee = $_SESSION['shipping_fee'];
+    
     $is_on_behalf = $_SESSION['on_behalf']? 1 : 0;
 
     if (($_SESSION['delivery_mode']=='Pick-up')|| ($_SESSION['payment_mode']=='Cash_On_Delivery'))
@@ -42,9 +42,9 @@ if (isset($_GET['process'])) {
     $arrival_date = 'NULL';
 
     $sql = "INSERT INTO requests 
-        (user_id, doc_id, request_date, status, delivery_mode, payment_mode, copies, shipping_fee, is_on_behalf, payment_status, shipping_date, arrival_date)
+        (user_id, doc_id, request_date, status, delivery_mode, payment_mode, copies, is_on_behalf, payment_status, shipping_date, arrival_date)
         VALUES
-        ('$user_id', '$doc_id', '$request_date', '$status', '$delivery_mode', '$payment_mode', '$copies','$shipping_fee', '$is_on_behalf', '$payment_status', $shipping_date, $arrival_date)";
+        ('$user_id', '$doc_id', '$request_date', '$status', '$delivery_mode', '$payment_mode', '$copies', '$is_on_behalf', '$payment_status', $shipping_date, $arrival_date)";
 
     if (mysqli_query($conn, $sql)) {
 

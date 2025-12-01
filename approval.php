@@ -90,7 +90,7 @@ if ($_SESSION['type'] == 'user') {
                             echo "<td>" . $email . "</td>";
                             echo "<td>" . $registerdate . "</td>";
                             echo "<td >
-                                <a href='view_id.php?view=" . $id . "' class='action-btn'>View Details</a>   
+                                <a href='view_id.php?view=" . $id . "' class='text-blue'>View Details</a>   
                                 </td>";
                             echo "</tr>";
                             

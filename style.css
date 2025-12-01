@@ -286,6 +286,10 @@ form p a{
     
 }
 
+.given{
+    text-align: left;
+}
+
 /*Upload ID Form Styles*/
 
 .valid-id h2{
@@ -1119,7 +1123,7 @@ p.bottom-space{
 .choosepayment{
     font-size:20px;
 }
-.right input {
+.right.c input {
     text-align: right;
     margin:0px 0px;
 }

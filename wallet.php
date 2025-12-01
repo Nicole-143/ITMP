@@ -136,7 +136,7 @@ mysqli_close($conn);
                 <div class="left">
                 <h2>Enter Top-Up Amount: </h2>
                 </div>
-                <div class="right align-right">
+                <div class="right c align-right">
                 <input type="number" name="topup_amount" id="topup_amount" min="1" step="0.01" class="top-space align-right" required>
                 </div>
 

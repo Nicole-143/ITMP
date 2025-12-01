@@ -64,7 +64,7 @@ if ($_SESSION['is_verified'] == 0 && $_SESSION['type'] == 'user') {
                 $user_id = $_SESSION['id'];
 
                 
-                $sql = "SELECT r.request_id, r.request_date, r.status, r.delivery_mode, r.payment_mode, r.payment_status, r.shipping_fee, r.shipping_date, r.arrival_date, 
+                $sql = "SELECT r.request_id, r.request_date, r.status, r.delivery_mode, r.payment_mode, r.payment_status, r.shipping_date, r.arrival_date, 
                             d.doc_name, 
                             p.amount, p.payment_date, p.transaction_type, r.is_on_behalf
                         FROM requests r
@@ -91,22 +91,23 @@ if ($_SESSION['is_verified'] == 0 && $_SESSION['type'] == 'user') {
                         </tr>
                         
                         ';
-                    while ($row = $result->fetch_row()) {
+                    while ($row = mysqli_fetch_row($result)) {
                         
+
                         $request_id = $row[0];
                         $request_date = date("m/d/Y", strtotime($row[1]));
                         $status = $row[2];
                         $delivery_mode = $row[3];
                         $payment_mode = $row[4] ? $row[4] : 'Cash'; // If payment_mode is NULL, show Cash
                         $payment_status = $row[5];
-                        $shipping_fee = $row[6];
-                        $shipping_date = $row[7] ? $row[7] : 'N/A'; 
-                        $arrival_date = $row[8] ? $row[8] : 'N/A'; 
-                        $doc_name = $row[9];
-                        $amount = $row[10] ? $row[10] : 'N/A'; 
-                        $payment_date = $row[11];
-                        $transaction_type = $row[12];
-                        $is_on_behalf = $row[13] ? 'Yes' : 'No'; // 'Yes' if receive on behalf, 'No' otherwise
+                        
+                        $shipping_date = $row[6] ? $row[6] : 'N/A'; 
+                        $arrival_date = $row[7] ? $row[7] : 'N/A'; 
+                        $doc_name = $row[8];
+                        $amount = $row[9] ? $row[9] : 'N/A'; 
+                        $payment_date = $row[10];
+                        $transaction_type = $row[11];
+                        $is_on_behalf = $row[12] ? 'Yes' : 'No'; // 'Yes' if receive on behalf, 'No' otherwise
 
                         
                         echo "<tr>

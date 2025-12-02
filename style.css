@@ -663,6 +663,11 @@ textarea:focus {
      
 }
 
+.track-req{
+    
+    margin-bottom:-30px;
+}
+
 .document-btns {
     width: 100%;
     table-layout: fixed;
@@ -1414,4 +1419,35 @@ p.bottom-space{
 
 .action-btn:hover , .back-btn:hover {
     background: #93B1E8;
+}
+
+/*View Users Styles*/
+
+.user-col th, .user-col td{
+    
+    margin:0px;
+    padding:0px;
+    text-align: center;
+}
+
+.spacer-id {
+    width: 10%; 
+}
+
+.spacer-name {
+    width: 30%; 
+}
+
+.spacer-email {
+    width: 20%; 
+}
+
+.spacer-phone {
+    width: 15%; 
+}
+.spacer-status {
+    width: 15%; 
+}
+.spacer-actions {
+    width: 10%; 
 }

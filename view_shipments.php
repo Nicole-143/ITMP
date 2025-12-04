@@ -51,9 +51,9 @@ if ($_SESSION['type'] == 'user') {
             <h2>View Shipments</h2>
         </div>
        
-        <div class="view-table">
-            <table>
-                <tr>
+        <div class="table-container">
+            <table class="approval">
+                <tr class="top-table">
                     <th>ID</th>
                     <th>Requested By</th>
                     <th>Order</th>

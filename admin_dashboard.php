@@ -48,7 +48,7 @@ $conn->close();
             <li>About</li>
             <li>FAQS</li>
             <li>Contact Us</li>
-            <li><a href="admin_dashboard.php">Home</a></li> <!--added by Khloe Nov 8-->
+            <li><a href="admin_dashboard.php">Home</a></li> 
             <li><a href="logout.php" onclick="">Logout</a></li>
         </ul>
     </nav>
@@ -71,10 +71,16 @@ $conn->close();
         <p>Access and review shipment records to track delivery status and history.</p>
         </a>
 
+
+        <a href="view_pickup.php" class="button-style">
+        <b>View Pick-up Documents</b>
+        <p>View approved pick-up document requests and update pick-up status.</p>
+        </a>
+        
         <a href="reports.php" class="button-style">
         <b>Generate Reports</b>
         <p>Generate and export monthly payment and document request reports as XML files.</p>
-        </a>
+        
 
         </div>
         

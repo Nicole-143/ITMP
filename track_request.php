@@ -48,12 +48,14 @@ if ($_SESSION['is_verified'] == 0 && $_SESSION['type'] == 'user') {
     </header>
 
     <div class="main-dashboard">
-       <div class="page-container track-req">
+       <div class="page-container">
             <h2><a href="dashboard.php"><b><-</b></a></h2>
             <h2>Track Document Requests</h2>
         </div>
        <div class="table-container">
             
+                
+
                 <?php
 
                 
@@ -96,14 +98,7 @@ if ($_SESSION['is_verified'] == 0 && $_SESSION['type'] == 'user') {
                         $request_date = date("m/d/Y", strtotime($row[1]));
                         $status = $row[2];
                         $delivery_mode = $row[3];
-                        
-                        
-                        if ($row[4]== 'Cash_On_Delivery'){
-                            $payment_mode = 'Cash On Delivery';
-                        }else{
-                            $payment_mode = $row[4] ? $row[4] : 'Cash'; // If payment_mode is NULL, show Cash
-                        }
-                        
+                        $payment_mode = $row[4] ? $row[4] : 'Cash'; // If payment_mode is NULL, show Cash
                         $payment_status = $row[5];
                         
                         $shipping_date = $row[6] ? $row[6] : 'N/A'; 

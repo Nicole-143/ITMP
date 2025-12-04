@@ -1,3 +1,18 @@
+<?php
+session_start();
+include "db.php";
+
+if (!isset($_SESSION['email']) || $_SESSION['type'] == 'user') {
+    header("Location: index.php");
+    exit();
+}
+
+// Fetch all users
+$sql = "SELECT id, givenname, surname, middlename, email, phone, is_verified, type 
+        FROM Users ORDER BY id ASC";
+$result = $conn->query($sql);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,94 +21,117 @@
     <title>Townsville Barangay System</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
+    <style>
+        /* Fix button layout */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            background-color: #004aad;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .delete-btn {
+            background-color: #b30000;
+        }
+
+        .action-btn:hover {
+            opacity: 0.8;
+        }
+    </style>
+
 </head>
 <body>
-    <header class="main-header">
-        <div class="logo">
+<header class="main-header">
+    <div class="logo">
         <img src="./images/logo.png">
         <div>
             <h4>BRGY. Townsville</h4>
             <h4>Document Request</h4>
         </div>
-        </div>
+    </div>
     <nav class="navigation-menu">
         <ul>
             <li>About</li>
             <li>FAQS</li>
             <li>Contact Us</li>
-            <li><a href="admin_dashboard.php">Home</a></li> 
-            <li><a href="logout.php" onclick="">Logout</a></li>
+            <li><a href="admin_dashboard.php">Home</a></li>
+            <li><a href="logout.php">Logout</a></li>
         </ul>
     </nav>
-    </header>
+</header>
 
-    <div class="main-dashboard">
-       <div class="page-container">
-            <h2><a href="admin_dashboard.php"><b><-</b></a></h2>
-            <h2>View Users</h2>
-        </div>
-       <div class="table-container">
-            <table class="approval user-col" >
-                <tr class="top-table" >
-               
-                <th class="spacer-id">ID</th>
-                <th class="spacer-name">Full Name</th>
-                <th class="spacer-email">Email</th>
-                <th class="spacer-phone">Phone</th>
-                <th class="spacer-status">Status</th>
-                <th class="spacer-actions">Actions</th>
+<div class="main-dashboard">
+    <div class="page-container">
+        <h2><a href="admin_dashboard.php"><b><-</b></a></h2>
+        <h2>View Users</h2>
+    </div>
 
-                </tr>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Fullname</th>
+            <th>User Type</th>
+            <th>Status</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Actions</th>
+        </tr>
 
-                <?php
+        <?php
+        if ($result && $result->num_rows > 0):
+            while ($row = $result->fetch_assoc()):
+                $fullname = $row["givenname"] . " " . $row["middlename"] . " " . $row["surname"];
 
-                include "db.php";
-                
-                $sql = "SELECT * FROM users";
-                $result = $conn->query($sql);
+                $status = $row['is_verified'] == 1 ? "Verified" : "Unverified";
+                $userType = ($row['type'] == "admin") ? "Admin" : "Resident";
+        ?>
 
-                if ($result->num_rows > 0) {
-                   
-                    while ($row = mysqli_fetch_row($result)) {
-                        
-                        
+        <tr>
+            <td><?= $row['id'] ?></td>
+            <td><?= htmlspecialchars($fullname) ?></td>
+            <td><?= $userType ?></td>
+            <td><?= $status ?></td>
+            <td><?= htmlspecialchars($row['email']) ?></td>
+            <td><?= htmlspecialchars($row['phone']) ?></td>
+            <td>
+                <div class="action-buttons">
 
-                            if ($row[11]=='user')
-                            {
-                        $id = $row[0];
-                        $givenname = $row[1];  
-                        $surname = $row[2];
-                        $middlename = $row[3];
-                        $email = $row[4];
-                        $phone = $row[6];
-                        $status = (($row[10] == 1)? 'Verified' : 'Unverified');
-                    
-                        
+                    <a href="view_user_details.php?id=<?= $row['id'] ?>" class="action-btn">
+                        View
+                    </a>
 
-                            // Display the row 
-                            echo "<tr>";
-                            echo "<td>" . $id. "</td>";
-                            echo "<td>" . $surname . " , " . $givenname . " " . $middlename."</td>";
-                            echo "<td>" . $email . "</td>";
-                            echo "<td>" . $phone . "</td>";
-                            echo "<td>" . $status . "</td>";
-                            
-                            echo "<td >
-                                <a href='edit_id.php?view=" . $id . "' class='text-blue'>Edit</a>   
-                                </td>";
-                            echo "</tr>";
-                        }
-                        
-                        
-                    }
-                } else {
-                    echo "<tr><td colspan='7'>No unverified accounts found</td></tr>";
-                }
+                    <?php if ($row['type'] != 'admin'): ?>
+                    <!-- Only allow deleting RESIDENT accounts -->
+                    <a href="delete_user.php?id=<?= $row['id'] ?>"
+                       class="action-btn delete-btn"
+                       onclick="return confirm('Are you sure you want to delete this user? This cannot be undone.');">
+                        Delete
+                    </a>
+                    <?php endif; ?>
 
-                mysqli_close($conn);
-                ?>
-            </table>
-        </div>
-        
+                </div>
+            </td>
+        </tr>
+
+        <?php
+            endwhile;
+        else:
+            echo "<tr><td colspan='7'>No users found.</td></tr>";
+        endif;
+
+        $conn->close();
+        ?>
+
+    </table>
+</div>
+
 </body>
 </html>

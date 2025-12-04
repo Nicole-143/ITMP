@@ -595,6 +595,7 @@ textarea:focus {
     /*top right-left bottom*/
     padding:30px 40px 0px;
     flex-direction: column;
+   
 }
 
 .admin-container h2{
@@ -605,6 +606,7 @@ textarea:focus {
     font-size:25px; 
     
     padding-bottom:12px;
+    
 }
 
 .admin-container p{
@@ -615,14 +617,20 @@ textarea:focus {
 }
 
 .btn-container{
-    width:945px;
+    
     display:flex;
     gap:20px;
-    justify-content: flex-start
+    justify-content: flex-start;
+    
 }
 
 .btn-container.b1{
     padding-bottom:24px;
+    width:1400px;
+}
+
+.btn-container.b2{
+    width:925px;
 }
 .button-style{
     border: 1px solid #757575;

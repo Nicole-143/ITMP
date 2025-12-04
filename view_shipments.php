@@ -1,4 +1,21 @@
 
+<?php 
+session_start();
+
+
+if (!isset($_SESSION['email'])) {
+    // Redirect to the login page if not logged in
+    header("Location: index.php");
+    exit();
+}
+
+if ($_SESSION['type'] == 'user') {
+    header("Location: dashboard.php"); 
+    exit();
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

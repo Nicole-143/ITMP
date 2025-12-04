@@ -71,6 +71,11 @@ $conn->close();
         <p>Access and review shipment records to track delivery status and history.</p>
         </a>
 
+        <a href="reports.php" class="button-style">
+        <b>Generate Reports</b>
+        <p>Generate and export monthly payment and document request reports as XML files.</p>
+        </a>
+
         </div>
         
         <h3>User Request Approval</h3>
@@ -84,6 +89,8 @@ $conn->close();
         <b>Document Request Approval</b>
         <p>Review and approve submitted document requests to ensure compliance and accuracy before processing.</p>
         </a>
+
+        
 
         </div>
         </div>

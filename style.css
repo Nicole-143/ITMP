@@ -1187,6 +1187,11 @@ p.bottom-space{
     font-size:25px;
 }
 
+.bottom-spacer.head4{
+    font-size:21px;
+}
+
+
 /*Track Request Styles*/
 
 .user-table{
@@ -1543,3 +1548,5 @@ p.bottom-space{
 .admin-dashboard.user {
     margin-bottom: 40px;
 }
+
+/* Reports Styles*/

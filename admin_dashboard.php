@@ -95,10 +95,16 @@ $conn->close();
         <b>Document Request Approval</b>
         <p>Review and approve submitted document requests to ensure compliance and accuracy before processing.</p>
         </a>
-
-        
-
         </div>
+
+        <h3>Official Document Catalog</h3>
+        <div class="btn-container b3">
+        <a href="manage_documents.php" class="button-style">
+        <b>Official Document Catalog</b>
+        <p>Manage public document offerings and set their access requirements.</p>
+        </a>
+        </div>
+        
         </div>
     </div>
 </body>

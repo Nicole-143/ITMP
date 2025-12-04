@@ -12,6 +12,8 @@ if (!isset($_SESSION['email'])) {
     exit();
 }
 
+
+
 if ($_SESSION['is_verified'] == 0 && $_SESSION['type'] == 'user') {
     header("Location: under_verification.php"); 
     exit();

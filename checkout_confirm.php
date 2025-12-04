@@ -1,11 +1,9 @@
-
 <?php 
 session_start();
 
 include "db.php";
 
 if (!isset($_SESSION['email'])) {
-    // Redirect to the login page if not logged in
     header("Location: index.php");
     exit();
 }
@@ -17,48 +15,53 @@ if ($_SESSION['is_verified'] == 0 && $_SESSION['type'] == 'user') {
 
 if (isset($_GET['pay'])) {
     $id = $_GET['pay'];
-    
-} 
+} else {
+    die("Missing pay parameter.");
+}
 
- $sql = "SELECT doc_name, price, shipping_fee FROM document_types WHERE doc_id = $id";
+// Fetch document info
+$sql = "SELECT doc_name, price, shipping_fee FROM document_types WHERE doc_id = $id";
+$result = $conn->query($sql);
 
-                    $result = $conn->query($sql);
-            
-                    if ($result->num_rows > 0) {
-                        
-                        while ($row = mysqli_fetch_row($result)) {
-                            $doc_name = $row[0]; 
-                            $price = $row[1]; 
-                            $shipping_fee = $row[2]; 
-                        }
-                }
-                    
+if ($result && $result->num_rows > 0) {
+    while ($row = mysqli_fetch_row($result)) {
+        $doc_name      = $row[0]; 
+        $price         = $row[1]; 
+        $shipping_fee  = $row[2]; 
+    }
+}
 
 $delivery_mode = $_SESSION['delivery_mode'];
 
 $_SESSION['price'] = $price;
 $copies = $_SESSION['copies'];
-$total = $copies*$price;
+$total  = $copies * $price;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    
     $_SESSION['copies'] = $copies;
-    
-
     $total = $copies * $price;
-     $_SESSION['shipping_fee']=$shipping_fee;
-     $_SESSION['total']=$total;  
-    
-    if($delivery_mode=='Pick-up'){
-        header("Location: request.php?process&pay=" . $id); 
+
+    // -----------------------------------
+    // FIX: ONLY APPLY SHIPPING FEE IF DELIVERY
+    // -----------------------------------
+    if ($delivery_mode == 'Pick-up') {
+        $_SESSION['shipping_fee'] = 0;
+    } else {
+        $_SESSION['shipping_fee'] = $shipping_fee; // 30 pesos from your DB
+    }
+
+    $_SESSION['total'] = $total;
+
+    // Where to go next?
+    if ($delivery_mode == 'Pick-up') {
+        header("Location: request.php?process&pay=" . $id);
+        exit();
+    } 
+    else if ($delivery_mode == 'Delivery') {
+        header("Location: payment.php?pay=" . $id);
         exit();
     }
-    elseif($delivery_mode=='Delivery'){
-        header("Location: payment.php?pay=" . $id); 
-        exit();
-    }
-      
 }
 
 $conn->close();
@@ -93,27 +96,17 @@ $conn->close();
     </nav>
     </header>
 
-
     <div class="main-page">
-       
-
        <div class="form-box request-box valid-id">       
                 
-                <h1>Checkout</h1>
-                <p class="reminder-content title">Reminder:</p>
-                <p class="reminder-content">Avoid transacting with online scammers! Barangay Townsville <b>DOES NOT</b> coordinate transactions and payment through FB messenger. No additional fees will be charged aside from what is indicated on your order.</p>
+            <h1>Checkout</h1>
+            <p class="reminder-content title">Reminder:</p>
+            <p class="reminder-content">Avoid transacting with online scammers! Barangay Townsville <b>DOES NOT</b> coordinate transactions and payment through FB messenger. No additional fees will be charged aside from what is indicated on your order.</p>
                 
-                <p class="reminder-content text l"><b>Document Request Details</b></p>
+            <p class="reminder-content text l"><b>Document Request Details</b></p>
 
-                <table>
-                
+            <table>
                 <?php
-                
-                
-                $copies = $_SESSION['copies'];
-                $total = $copies*$price;
-                
-                
                 echo '<tr>
                         <td><p class="reminder-content text"><b>Document Type: </b></p></td>
                         <td><p class="reminder-content text">'.$doc_name.'</p></td>
@@ -128,30 +121,24 @@ $conn->close();
                         <td><p class="reminder-content text"><b>Total Price: </b></p></td>
                         <td><p class="reminder-content text">₱ '.$total.'.00</p></td>
                     </tr>';
-
                 ?>
-               
-                </table>
+            </table>
 
-
-                <p class="reminder-content text">Please confirm if you’re able to receive the document by presenting an original government-issued ID of the document holder.</p>
-                <p class="reminder-content text"><b>If you’re accepting the document on someone else’s behalf, </b>kindly provide your own government-issued ID along with the document owner’s ID and an authorization letter.</p>
+            <p class="reminder-content text">Please confirm if you’re able to receive the document by presenting an original government-issued ID of the document holder.</p>
+            <p class="reminder-content text"><b>If you’re accepting the document on someone else’s behalf, </b>kindly provide your own government-issued ID along with the document owner’s ID and an authorization letter.</p>
                 
-                <form action="checkout_confirm.php?pay=<?php echo $id?>" method="POST"> 
+            <form action="checkout_confirm.php?pay=<?php echo $id ?>" method="POST"> 
                 <div class="checkbox-container">
                     <input type="checkbox" id="on-behalf" name="on-behalf" value="on-behalf">
                     <label for="on-behalf">I confirm</label>
                 </div>
-               
-               
+
                 <div class="bottom doc-btns">
                     <a href="checkout.php?pay=<?php echo $id; ?>" class="back-btn">Previous</a>
                     <button type="submit">Next</button>
-
                 </div>
-        </form>
-
-        
+            </form>  
+        </div>
     </div>
 </body>
 </html>

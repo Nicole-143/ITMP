@@ -98,6 +98,8 @@ CREATE TABLE Requests (
     payment_status ENUM('Pending', 'Paid', 'Refunded') NOT NULL DEFAULT 'Pending',
     shipping_date DATETIME DEFAULT NULL, 
     arrival_date DATETIME DEFAULT NULL,
+    pickup_status ENUM('Not Picked Up','Picked Up') NOT NULL DEFAULT 'Not Picked Up',
+    pickup_date DATETIME DEFAULT NULL,
     CONSTRAINT requests_fk_user FOREIGN KEY (user_id) REFERENCES users(id),
 	CONSTRAINT requests_fk_docu FOREIGN KEY (doc_id) REFERENCES document_types(doc_id)
 );

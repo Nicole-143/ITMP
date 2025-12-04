@@ -70,10 +70,12 @@ $registered = $user['registerdate'] ? date("M d, Y h:i A", strtotime($user['regi
             <h2>Back To Users</h2>
         </div>
 
-        <h3 class="bottom-spacer head3">User Details</h3>
         <div class="approval user">
-            
             <table class="info-table user">
+                <tr class="top-table user">
+                    <th colspan="2">User Details</th>
+                </tr>
+
                 <tr>
                     <td class="detail"><b>Full Name</b></td>
                     <td><?= htmlspecialchars($fullname); ?></td>

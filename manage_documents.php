@@ -34,12 +34,13 @@
             <h2>Official Document Catalog</h2>
         </div>
        
-        <div class="view-table">
-
-            <table>
-                <tr>
+        
+         <div class="table-container documents">
+            <table class="approval">
+                <tr class="top-table">
+           
                     <th>ID</th>
-                    <th>Documents Offered</th>
+                    <th class="doc">Documents Offered</th>
                     <th>Price</th>
                     <th>Status</th>
                     <th>Action</th>
@@ -79,7 +80,6 @@
         </div>
 
         <div class="bottom doc-btns">
-            <a href="admin_dashboard.php" class="back-btn">Back</a>
             <a href="admin_create_documents.php?id=<?php echo $id;?>" class="action-btn">Create a New Document</a>
         </div>
 

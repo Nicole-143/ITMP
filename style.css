@@ -465,6 +465,9 @@ input::-webkit-inner-spin-button {
     top:0;
 }
 
+.top-table.user th{
+    position: static;
+}
 .approval {
     width: 100%;
     table-layout: fixed;
@@ -499,9 +502,22 @@ input::-webkit-inner-spin-button {
     height: 500px; 
     overflow-y: auto; 
     overflow-x: hidden;
-  
+
 }
 
+.table-container.documents{
+    max-height:440px;
+    border:1px solid var(--header-color);
+}
+
+.table-container.documents table{
+   
+    border:none;
+}
+
+.table-container.documents .approval .top-table .doc{
+    width:30%;
+}
 /* View Details */
 
 .page-container{
@@ -1191,6 +1207,10 @@ p.bottom-space{
 
 .bottom-spacer.head3{
     font-size:25px;
+}
+
+.bottom-spacer.head4{
+    font-size:21px;
 }
 
 /*Track Request Styles*/

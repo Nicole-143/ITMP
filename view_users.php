@@ -8,8 +8,7 @@ if (!isset($_SESSION['email']) || $_SESSION['type'] == 'user') {
 }
 
 // Fetch all users
-$sql = "SELECT id, givenname, surname, middlename, email, phone, is_verified, type 
-        FROM Users ORDER BY id ASC";
+$sql = "SELECT * FROM view_users";
 $result = $conn->query($sql);
 ?>
 

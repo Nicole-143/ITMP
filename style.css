@@ -640,6 +640,12 @@ textarea:focus {
 }
 
 .btn-container.b2{
+    padding-bottom:24px;
+    max-width:1400px; /*925px*/
+    
+}
+
+.btn-container.b3{
     max-width:1400px; /*925px*/
     
 }

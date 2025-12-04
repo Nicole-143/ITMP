@@ -67,7 +67,7 @@ $conn->close();
         include "db.php"; 
 
 
-        $sql = "SELECT doc_id, doc_name, description FROM document_types"; 
+        $sql = "SELECT * FROM dashboard_documents"; 
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {

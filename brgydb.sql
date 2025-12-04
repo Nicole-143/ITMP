@@ -6,18 +6,20 @@ CREATE TABLE Document_Types(
     doc_name VARCHAR(255) NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
     shipping_fee DECIMAL(10, 2) NOT NULL,
-    description VARCHAR(255) NOT NULL
-) AUTO_INCREMENT = 8;
+    description VARCHAR(255) NOT NULL,
+    status ENUM('Active', 'Inactive')
+) AUTO_INCREMENT = 9;
 
-INSERT INTO Document_Types (doc_id, doc_name, price, shipping_fee, description) 
+INSERT INTO Document_Types (doc_id, doc_name, price, shipping_fee, description, status) 
 VALUES
-(1, 'Community Tax Certificate (Cedula)', 20.00, 30.00, 'Proof of tax payment and identity, often required for official transactions.'),
-(2, 'Barangay Clearance', 20.00, 30.00, 'Certification from the barangay confirming good standing in the community.'),
-(3, 'Certificate of Residency', 20.00, 30.00, 'Verifies that an individual is a resident of a specific barangay.'),
-(4, 'Certificate of Indigency', 20.00, 30.00, 'Declares that a person or family belongs to the low-income or indigent sector.'),
-(5, 'Certificate of Good Moral Character', 20.00, 30.00, 'Affirms that a person has no record of misconduct in the community.'),
-(6, 'Certificate for Business', 20.00, 30.00, 'Confirms that a business is operating within the barangay with approval.'),
-(7, 'Certificate of No Objection', 20.00, 30.00, 'States that the barangay has no objection to a specific request or action.');
+(1, 'Community Tax Certificate (Cedula)', 20.00, 30.00, 'Proof of tax payment and identity, often required for official transactions.', 'Active'),
+(2, 'Barangay Clearance', 20.00, 30.00, 'Certification from the barangay confirming good standing in the community.', 'Active'),
+(3, 'Certificate of Residency', 20.00, 30.00, 'Verifies that an individual is a resident of a specific barangay.', 'Active'),
+(4, 'Certificate of Indigency', 20.00, 30.00, 'Declares that a person or family belongs to the low-income or indigent sector.', 'Active'),
+(5, 'Certificate of Good Moral Character', 20.00, 30.00, 'Affirms that a person has no record of misconduct in the community.', 'Active'),
+(6, 'Certificate for Business', 20.00, 30.00, 'Confirms that a business is operating within the barangay with approval.', 'Active'),
+(7, 'Certificate of No Objection', 20.00, 30.00, 'States that the barangay has no objection to a specific request or action.', 'Active'),
+(8, 'Certificate of Nothing', 20.00, 30.00, 'States absolutely nothing.', 'Inactive');
 
 CREATE TABLE Requirements(
 	req_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -67,23 +69,23 @@ CREATE TABLE Users(
     birthdate DATE NOT NULL,
     is_verified TINYINT NOT NULL DEFAULT 0,
     type ENUM('admin', 'user') NOT NULL DEFAULT 'user',
-    upload_id varchar(255) NOT NULL,
+    upload_id varchar(255),
     registerdate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     comment VARCHAR(255) DEFAULT NULL
 );
 -- ADMIN ---
-INSERT INTO Users (givenname, surname, middlename, email, password, phone, address, sex, birthdate, is_verified, type, registerdate)
+INSERT INTO Users (givenname, surname, middlename, email, password, phone, address, sex, birthdate, is_verified, type, upload_id, registerdate)
 VALUES
-('Admin Ding', 'Chong', 'Arroyo', 'ding_chong@gmail.com', 'AdminShh04!', '09123456789', '143 Taft Avenue St., Brgy. A', 'Female', '2005-11-12', 1, 'admin', CURRENT_TIMESTAMP());
+('Admin Ding', 'Chong', 'Arroyo', 'ding_chong@gmail.com', 'AdminShh04!', '09123456789', '143 Taft Avenue St., Brgy. A', 'Female', '2005-11-12', 1, 'admin', 'logo.jpg', CURRENT_TIMESTAMP());
 
 -- 5 VERIFIED USERS --
-INSERT INTO Users (givenname, surname, middlename, email, password, phone, address, sex, birthdate, is_verified, type, registerdate)
+INSERT INTO Users (givenname, surname, middlename, email, password, phone, address, sex, birthdate, is_verified, type, upload_id, registerdate)
 VALUES
-('Maria', 'Santos', 'Reyes', 'maria.santos@email.com', 'SecurePass123!', '09171234567', '143 Maganda St., Brgy. A', 'Female', '1990-05-15', 1, 'user', CURRENT_TIMESTAMP()),
-('Jose', 'Dela Cruz', 'López', 'jose.dcruz@email.com', 'SecurePass123!', '09187654321', '22 Balikatan Ave., Brgy. A', 'Male', '1985-11-20', 1, 'user', CURRENT_TIMESTAMP()),
-('Carla', 'Garcia', 'Perez', 'carla.garcia@email.com', 'SecurePass123!', '09998887777', '99 Masipag Corner, Brgy. A', 'Female', '2001-02-28', 1, 'user', CURRENT_TIMESTAMP()),
-('Benito', 'Ramos', 'Torres', 'benito.ramos@email.com', 'SecurePass123!', '09205554444', '1 Puso Rd., Brgy. A', 'Male', '1976-08-01', 1, 'user', CURRENT_TIMESTAMP()),
-('Sofia', 'Mendoza', 'Cruz', 'sofia.mendoza@email.com', 'SecurePass123!', '09051112222', '30 Araw St., Brgy. A', 'Female', '1995-04-10', 1, 'user', CURRENT_TIMESTAMP());
+('Maria', 'Santos', 'Reyes', 'maria.santos@email.com', 'SecurePass123!', '09171234567', '143 Maganda St., Brgy. A', 'Female', '1990-05-15', 1, 'user', 'logo.jpg', CURRENT_TIMESTAMP()),
+('Jose', 'Dela Cruz', 'López', 'jose.dcruz@email.com', 'SecurePass123!', '09187654321', '22 Balikatan Ave., Brgy. A', 'Male', '1985-11-20', 1, 'user', 'logo.jpg', CURRENT_TIMESTAMP()),
+('Carla', 'Garcia', 'Perez', 'carla.garcia@email.com', 'SecurePass123!', '09998887777', '99 Masipag Corner, Brgy. A', 'Female', '2001-02-28', 1, 'user', 'logo.jpg', CURRENT_TIMESTAMP()),
+('Benito', 'Ramos', 'Torres', 'benito.ramos@email.com', 'SecurePass123!', '09205554444', '1 Puso Rd., Brgy. A', 'Male', '1976-08-01', 1, 'user', 'logo.jpg', CURRENT_TIMESTAMP()),
+('Sofia', 'Mendoza', 'Cruz', 'sofia.mendoza@email.com', 'SecurePass123!', '09051112222', '30 Araw St., Brgy. A', 'Female', '1995-04-10', 1, 'user', 'logo.jpg', CURRENT_TIMESTAMP());
 
 CREATE TABLE Requests (
 	request_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -164,5 +166,19 @@ FROM Requests r
 LEFT JOIN Users u
 	ON u.id = r.user_id
 LEFT JOIN Document_Types dt
-	ON dt.doc_id = r.doc_id
-    
+	ON dt.doc_id = r.doc_id;
+
+CREATE VIEW manage_documents AS
+SELECT dt.doc_id, dt.doc_name, dt.description, dt.price, dt.shipping_fee, dt.status
+FROM Document_Types dt;
+
+CREATE VIEW dashboard_documents AS
+SELECT doc_id, doc_name, description
+FROM document_types
+WHERE status = 'Active';
+
+CREATE VIEW document_requirements AS
+SELECT r.req_name, dtr.doc_id
+FROM Requirements r
+JOIN Doc_Type_Requirements dtr
+	ON r.req_id = dtr.req_id

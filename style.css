@@ -471,14 +471,16 @@ input::-webkit-inner-spin-button {
     border-collapse: separate;  
     border-spacing: 0;         
     border: 1px solid var(--header-color); 
-    font-size:18px;          
+    font-size:18px;  
     
 }
 
 .approval th, .approval td {
     padding: 4px;   
-    padding-left:50px;          
-    height:63px;      
+          
+    height:63px;  
+    text-align:center;    
+    
     
 }
 
@@ -556,6 +558,13 @@ textarea:focus {
     margin-bottom: 10px;
 }
 
+
+.info-table.user{
+    margin-bottom: 0;  
+}
+
+
+
 .info-table th, .info-table td {
                
     height:63px;      
@@ -626,19 +635,22 @@ textarea:focus {
 
 .btn-container.b1{
     padding-bottom:24px;
-    width:1400px;
+    max-width:1400px;
+    
 }
 
 .btn-container.b2{
-    width:925px;
+    max-width:1400px; /*925px*/
+    
 }
 .button-style{
     border: 1px solid #757575;
     background-color: #EEEEEE;
-    width:578px;
-    height:180px;
+    flex: 1; 
+    height:auto;
+    
     border-radius: 15px;
-    padding:20px;
+    padding:20px 20px 40px;
     text-decoration: none;
     color:#000000;
 }
@@ -1167,6 +1179,14 @@ p.bottom-space{
     margin-top:30px;
 }
 
+.bottom-spacer{
+    margin-bottom:20px;
+}
+
+.bottom-spacer.head3{
+    font-size:25px;
+}
+
 /*Track Request Styles*/
 
 .user-table{
@@ -1389,6 +1409,7 @@ p.bottom-space{
     
     font-size:18px;
 }
+
 .previous-btn{
     background-color: #969696;
     color: #ffffff;
@@ -1422,4 +1443,103 @@ p.bottom-space{
 
 .action-btn:hover , .back-btn:hover {
     background: #93B1E8;
+}
+
+.approval.user td{
+    padding-left:0px;
+    
+    text-align: center;
+}
+
+.table-container.user th{
+    text-align:center;
+    padding-left:0px;
+}
+.top-table.user tr{
+    text-align: center;
+}
+
+.action-buttons {
+
+            display: flex;
+            gap: 10px;
+            padding:0px 30px 0px;
+        }
+
+
+.delete-btn{
+    background-color: #b30000;
+}
+.spacer-id {
+    width: 5%; 
+}
+
+.spacer-rid {
+    width: 9%; 
+}
+
+.spacer-name {
+    width: 20%; 
+}
+
+.spacer-type{
+    width:11%;
+}
+
+.spacer-status {
+    width: 14%; 
+}
+
+.spacer-email {
+    width: 20%; 
+}
+
+.spacer-phone {
+    width: 10%; 
+}
+
+.spacer-action {
+    width: 8%;     
+}
+
+.request-container{
+    margin: 0px 20px;
+    text-align:center;
+    
+}
+
+
+.request-btn.user{
+    padding:0px;
+    margin:0px;
+    
+}
+.spacer-actions {
+    width: 15%; 
+    
+}
+
+.img-container {
+    width: 700px;       
+    height: 300px;       
+    justify-content: center;
+    align-items: center; 
+    margin: 0px;
+    padding: 10px;
+}
+.img-container img {
+    width: 100%;      
+    height: 100%;      
+    object-fit: contain;  
+}
+
+
+.pick-option input,
+.pick-option select {
+    width: 150px;
+    margin:0px;
+}
+
+.admin-dashboard.user {
+    margin-bottom: 40px;
 }

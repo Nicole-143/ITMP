@@ -21,7 +21,8 @@ if (isset($_POST['update_pickup'])) {
             UPDATE Requests 
             SET pickup_status = 'Picked Up',
                 pickup_date = $pickup_date,
-                status = 'Released'
+                status = 'Released',
+                payment_status = 'Paid'
             WHERE request_id = $request_id
         ";
     } else {
@@ -45,7 +46,7 @@ if (isset($_POST['update_pickup'])) {
 --------------------------------*/
 $sql_not = "
     SELECT r.request_id, r.pickup_status, r.request_date, r.copies, 
-           r.pickup_date, u.givenname, u.surname, dt.doc_name
+           r.pickup_date, u.givenname, u.surname,u.middlename, dt.doc_name
     FROM Requests r
     LEFT JOIN Users u ON u.id = r.user_id
     LEFT JOIN Document_Types dt ON dt.doc_id = r.doc_id
@@ -62,7 +63,7 @@ $not_picked = mysqli_query($conn, $sql_not);
 --------------------------------*/
 $sql_yes = "
     SELECT r.request_id, r.pickup_status, r.request_date, r.copies, 
-           r.pickup_date, u.givenname, u.surname, dt.doc_name
+           r.pickup_date, u.givenname, u.surname, u.middlename, dt.doc_name
     FROM Requests r
     LEFT JOIN Users u ON u.id = r.user_id
     LEFT JOIN Document_Types dt ON dt.doc_id = r.doc_id
@@ -81,6 +82,7 @@ $picked = mysqli_query($conn, $sql_yes);
     <meta charset="UTF-8">
     <title>Pickup Documents - Admin</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -101,10 +103,14 @@ $picked = mysqli_query($conn, $sql_yes);
     </nav>
 </header>
 
-<div class="main-admin-dashboard">
+<div class="main-admin-dashboard user">
     <div class="admin-container">
 
-        <h2>Pick-up Document Requests</h2>
+        <div class="page-container">
+            <h2><a href="admin_dashboard.php"><b><-</b></a></h2>
+            <h2>Pick-up Document Requests</h2>
+            
+        </div>
 
         <?php if (isset($_GET['updated'])): ?>
             <p class="success-message" style="color: green;">Pickup status updated successfully.</p>
@@ -114,48 +120,62 @@ $picked = mysqli_query($conn, $sql_yes);
              TABLE 1: NOT PICKED UP
         ============================= -->
         <h3>Not Picked Up</h3>
-
-        <table class="admin-table">
+        
+        <table class="approval user">
             <thead>
-                <tr>
-                    <th>Request ID</th>
-                    <th>User Name</th>
+                <tr class="top-table">
+                    <th class="spacer-rid">Request ID</th>
+                    <th class="spacer-name">User Name</th>
                     <th>Document</th>
-                    <th>Copies</th>
+                    <th class="spacer-id">Copies</th>
                     <th>Request Date</th>
                     <th>Pickup Date</th>
                     <th>Pickup Status</th>
-                    <th>Action</th>
+                    <th class="spacer-action">Action</th>
                 </tr>
             </thead>
 
             <tbody>
                 <?php if (mysqli_num_rows($not_picked) > 0): ?>
-                    <?php while ($row = mysqli_fetch_assoc($not_picked)): ?>
+                    <?php while ($row = mysqli_fetch_assoc($not_picked)): 
+                        
+                        
+                        $middlename = $row['middlename'];
+                        $middleinitial = !empty($middlename) ? strtoupper($middlename[0]) : '';
+
+                        ?>
                         <tr>
                             <td><?= $row['request_id'] ?></td>
-                            <td><?= $row['givenname']." ".$row['surname'] ?></td>
+
+                            
+                            <td><?= $row['surname'].", ".$row['givenname']." ".$middleinitial."." ?></td>
                             <td><?= $row['doc_name'] ?></td>
                             <td><?= $row['copies'] ?></td>
                             <td><?= date("M d, Y h:i A", strtotime($row['request_date'])) ?></td>
 
                             <form action="view_pickup.php" method="POST">
                                 <td>
+                                    <div class="pick-option">
                                     <input type="datetime-local" 
                                            name="pickup_date" 
                                            value="<?= $row['pickup_date'] ? date('Y-m-d\TH:i', strtotime($row['pickup_date'])) : '' ?>">
+                                    </div>
                                 </td>
 
                                 <td>
+                                    <div class="pick-option">
                                     <input type="hidden" name="request_id" value="<?= $row['request_id'] ?>">
                                     <select name="pickup_status" class="display-amount">
                                         <option value="Not Picked Up" selected>Not Picked Up</option>
                                         <option value="Picked Up">Picked Up</option>
                                     </select>
+                                    </div>
                                 </td>
 
                                 <td>
-                                    <button type="submit" name="update_pickup" class="request-btn">Update</button>
+                                    <div class="request-container">
+                                    <button type="submit" name="update_pickup" class="request-btn user">Update</button>
+                                    </div>
                                 </td>
                             </form>
                         </tr>
@@ -165,17 +185,17 @@ $picked = mysqli_query($conn, $sql_yes);
                 <?php endif; ?>
             </tbody>
         </table>
-
+        
         <!-- ============================
              TABLE 2: PICKED UP
         ============================= -->
         <h3 style="margin-top: 40px;">Picked Up Documents</h3>
 
-        <table class="admin-table">
+        <table class="approval user">
             <thead>
-                <tr>
-                    <th>Request ID</th>
-                    <th>User Name</th>
+                <tr class="top-table">
+                    <th class="spacer-rid">Request ID</th>
+                    <th class="spacer-name">User Name</th>
                     <th>Document</th>
                     <th>Copies</th>
                     <th>Request Date</th>
@@ -186,15 +206,23 @@ $picked = mysqli_query($conn, $sql_yes);
 
             <tbody>
                 <?php if (mysqli_num_rows($picked) > 0): ?>
-                    <?php while ($row = mysqli_fetch_assoc($picked)): ?>
+                    <?php while ($row = mysqli_fetch_assoc($picked)): 
+                        
+                        $middlename = $row['middlename'];
+                        $middleinitial = !empty($middlename) ? strtoupper($middlename[0]) : '';
+
+                        ?>
                         <tr>
-                            <td><?= $row['request_id'] ?></td>
-                            <td><?= $row['givenname']." ".$row['surname'] ?></td>
+                            <td ><?= $row['request_id'] ?></td>
+                            <td><?= $row['surname'].", ".$row['givenname']." ".$middleinitial."." ?></td>
                             <td><?= $row['doc_name'] ?></td>
                             <td><?= $row['copies'] ?></td>
-                            <td><?= date("M d, Y h:i A", strtotime($row['request_date'])) ?></td>
+                            <td>
+                            
+                            <?= date("M d, Y h:i A", strtotime($row['request_date'])) ?>
+                            </td>
                             <td><?= date("M d, Y h:i A", strtotime($row['pickup_date'])) ?></td>
-                            <td><b style="color: green;">Picked Up</b></td>
+                            <td><b>Picked Up</b></td>
                         </tr>
                     <?php endwhile; ?>
                 <?php else: ?>

@@ -80,7 +80,7 @@ $conn->close();
         <a href="reports.php" class="button-style">
         <b>Generate Reports</b>
         <p>Generate and export monthly payment and document request reports as XML files.</p>
-        
+        </a>
 
         </div>
         

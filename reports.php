@@ -49,7 +49,7 @@ if ($_SESSION['type'] == 'user') {
     <div class="main-dashboard">
        <div class="page-container">
             <h2><a href="admin_dashboard.php"><b><-</b></a></h2>
-            <h2>Account Registration Approval</h2>
+            <h2>Generate Reports</h2>
             
         </div>
        <div class="table-container">

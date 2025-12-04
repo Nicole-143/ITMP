@@ -145,9 +145,6 @@ mysqli_close($conn);
     ';
 } 
 
-else if (isset($_GET['checkout'])){
-    
-}
-    ?>
+   ?>
 </body>
 </html>

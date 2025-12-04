@@ -74,6 +74,7 @@ if ($_SESSION['type'] == 'user') {
             $result = $conn->query($sql);
             
             while($row = mysqli_fetch_array($result)){
+
             
                 $id = $row['request_id'];
                 $surname = $row['surname'];
@@ -86,7 +87,8 @@ if ($_SESSION['type'] == 'user') {
                 $a_date = $row['arrival_date'];
             
                 // Get the middle initial
-                $middleinitial = strtoupper($middlename[0]);
+                $middleinitial = !empty($middlename) ? strtoupper($middlename[0]) : '';
+
             
                 // Format the dates
                 $registerdate = date("m/d/Y", strtotime($r_date));

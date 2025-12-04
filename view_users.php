@@ -22,30 +22,7 @@ $result = $conn->query($sql);
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 
-    <style>
-        /* Fix button layout */
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-        }
 
-        .action-btn {
-            padding: 6px 12px;
-            background-color: #004aad;
-            color: white;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .delete-btn {
-            background-color: #b30000;
-        }
-
-        .action-btn:hover {
-            opacity: 0.8;
-        }
-    </style>
 
 </head>
 <body>
@@ -73,16 +50,16 @@ $result = $conn->query($sql);
         <h2><a href="admin_dashboard.php"><b><-</b></a></h2>
         <h2>View Users</h2>
     </div>
-
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Fullname</th>
-            <th>User Type</th>
-            <th>Status</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Actions</th>
+    <div class="table-container user">
+    <table class="approval user">
+        <tr class="top-table">
+            <th class="spacer-id">ID</th>
+            <th class="spacer-name">Fullname</th>
+            <th class="spacer-type">User Type</th>
+            <th class="spacer-status">Status</th>
+            <th class="spacer-email">Email</th>
+            <th class="spacer-phone">Phone</th>
+            <th class="spacer-actions">Actions</th>
         </tr>
 
         <?php
@@ -102,22 +79,12 @@ $result = $conn->query($sql);
             <td><?= htmlspecialchars($row['email']) ?></td>
             <td><?= htmlspecialchars($row['phone']) ?></td>
             <td>
-                <div class="action-buttons">
+                
 
-                    <a href="view_user_details.php?id=<?= $row['id'] ?>" class="action-btn">
-                        View
+                    <a href="view_user_details.php?id=<?= $row['id'] ?>" class="text-blue">
+                        View Details
                     </a>
 
-                    <?php if ($row['type'] != 'admin'): ?>
-                    <!-- Only allow deleting RESIDENT accounts -->
-                    <a href="delete_user.php?id=<?= $row['id'] ?>"
-                       class="action-btn delete-btn"
-                       onclick="return confirm('Are you sure you want to delete this user? This cannot be undone.');">
-                        Delete
-                    </a>
-                    <?php endif; ?>
-
-                </div>
             </td>
         </tr>
 
@@ -131,6 +98,7 @@ $result = $conn->query($sql);
         ?>
 
     </table>
+    </div>
 </div>
 
 </body>

@@ -126,7 +126,7 @@ $picked = mysqli_query($conn, $sql_yes);
                 <tr class="top-table">
                     <th class="spacer-rid">Request ID</th>
                     <th class="spacer-name">User Name</th>
-                    <th>Document</th>
+                    <th >Document</th>
                     <th class="spacer-id">Copies</th>
                     <th>Request Date</th>
                     <th>Pickup Date</th>
@@ -197,7 +197,7 @@ $picked = mysqli_query($conn, $sql_yes);
                     <th class="spacer-rid">Request ID</th>
                     <th class="spacer-name">User Name</th>
                     <th>Document</th>
-                    <th>Copies</th>
+                    <th class="spacer-id">Copies</th>
                     <th>Request Date</th>
                     <th>Pickup Date</th>
                     <th>Status</th>

@@ -17,7 +17,7 @@ if ($_SESSION['type'] == 'user') {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     $month = $_POST['month']; 
-
+    $year = $_POST['year'];
     $report_type = $_POST['report_type'];
 
     $monthNames = [
@@ -29,16 +29,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($report_type == "payments") {
        
-        generatePaymentsReport($month, $monthName);
+        generatePaymentsReport($month, $monthName, $year);
     } elseif ($report_type == "document_requests") {
        
-        generateDocumentRequestsReport($month, $monthName);
+        generateDocumentRequestsReport($month, $monthName, $year);
     }
 }
 
 
 
-function generatePaymentsReport($month, $monthName) {
+function generatePaymentsReport($month, $monthName,$year) {
     
     include "db.php";
    
@@ -46,7 +46,7 @@ function generatePaymentsReport($month, $monthName) {
     $sql = "SELECT p.payment_id, p.amount, p.payment_date, r.request_id
             FROM payments p
             LEFT JOIN requests r ON p.request_id = r.request_id
-            WHERE MONTH(p.payment_date) = '$month'";
+            WHERE MONTH(p.payment_date) = '$month'AND YEAR(p.payment_date) = '$year'";
     $result = mysqli_query($conn, $sql);
 
     if (!$result) {
@@ -66,7 +66,9 @@ function generatePaymentsReport($month, $monthName) {
         $monthElement = $xml->createElement('month', $monthName);
         $payments->appendChild($monthElement);
 
-        
+        $yearElement = $xml->createElement('year', $year);
+        $payments->appendChild($yearElement);
+
         $total_amount = 0;
         $payment_count = 0;
 
@@ -96,13 +98,13 @@ function generatePaymentsReport($month, $monthName) {
         $payments->appendChild($xml->createElement('payment_count', $payment_count));
 
         header('Content-Type: application/xml');
-        header('Content-Disposition: attachment; filename="'.$monthName .'_Payments_Report' . '.xml"');
+        header('Content-Disposition: attachment; filename="'.$monthName .'_'.$year.'_Payments_Report' . '.xml"');
         echo $xml->saveXML();
         mysqli_close($conn);
         exit();
         
     } else {
-        header("Location: reports.php?none=$monthName");
+        header("Location: reports.php?none=$monthName&year=$year");
         exit();
     }
 
@@ -110,7 +112,7 @@ function generatePaymentsReport($month, $monthName) {
 }
 
 
-function generateDocumentRequestsReport($month, $monthName) {
+function generateDocumentRequestsReport($month, $monthName, $year) {
     include "db.php";
     
     $sql = "
@@ -127,7 +129,7 @@ function generateDocumentRequestsReport($month, $monthName) {
         LEFT JOIN 
             document_types dt ON r.doc_id = dt.doc_id
         WHERE 
-            MONTH(r.request_date) = '$month' 
+            MONTH(r.request_date) = '$month' AND YEAR(r.request_date) = '$year'
         GROUP BY 
             dt.doc_name;
     ";
@@ -149,7 +151,9 @@ function generateDocumentRequestsReport($month, $monthName) {
        
         $monthElement = $xml->createElement('month', $monthName);
         $docRequests->appendChild($monthElement);
-
+        
+        $yearElement = $xml->createElement('year', $year);
+        $docRequests->appendChild($yearElement);
        
         $summary = $xml->createElement('summary');
         $docRequests->appendChild($summary);
@@ -203,14 +207,14 @@ function generateDocumentRequestsReport($month, $monthName) {
 
        
         header('Content-Type: application/xml');
-        header('Content-Disposition: attachment; filename="'.$monthName.'_Document_Requests_Report.xml"');
+        header('Content-Disposition: attachment; filename="'.$monthName.'_'.$year.'_Document_Requests_Report.xml"');
         echo $xml->saveXML();
 
         mysqli_close($conn);
         exit();
     } else {
        
-        header("Location: reports.php?none=$monthName");
+        header("Location: reports.php?none=$monthName&year=$year");
         exit();
     }
 }
@@ -258,8 +262,8 @@ function generateDocumentRequestsReport($month, $monthName) {
             
         </div>
 
-        <?php if  (isset($_GET['none'])): ?>
-            <p class="bottom-spacer head4">No data found for the month of <?php echo htmlspecialchars($_GET['none']); ?>.</p>
+        <?php if  (isset($_GET['none'])&& isset($_GET['year'])): ?>
+            <p class="bottom-spacer head4">No data found for <?php echo htmlspecialchars($_GET['none']); ?> <?php echo htmlspecialchars($_GET['year']); ?>.</p>
         <?php endif; ?>
 
         <h3>Select Month:</h3>
@@ -281,8 +285,23 @@ function generateDocumentRequestsReport($month, $monthName) {
                     <option value="11">November</option>
                     <option value="12">December</option>
                 </select>
+
+                
+            </div>
+            <h3>Select Year:</h3>
+            <div>
+                <select name="year" id="year">
+                <?php 
+                    
+                    $currentYear = date('Y');
+                    for ($year = 2020; $year <= $currentYear; $year++) {
+                        echo "<option value='$year'>$year</option>";
+                    }
+                ?>
+            </select>
             </div>
 
+            
             <h3>Select Report Type:</h3>
 
             <div class="bottom doc-btns">

@@ -10,45 +10,57 @@ if (isset($_POST['submit'])) {
     $password = $_POST['password'];
 
     // check if email and password match to a user
-    $sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
+    $sql = "SELECT * FROM users WHERE email = ?";
 
-    
-    $result = $conn->query($sql);
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+
+    $result = $stmt->get_result();
 
     // Check if a matching user is found
-    if ($result->num_rows > 0) {
+    if ($result->num_rows === 1) {
         
+
         $user = mysqli_fetch_array($result); 
-        // Store user data in session
-        $_SESSION['id'] = $user['id'];
-        $_SESSION['email'] = $user['email'];
-        $_SESSION['givenname'] = $user['givenname'];
-        $_SESSION['type'] = $user['type'];             
-        $_SESSION['is_verified'] = $user['is_verified'];
-        $_SESSION['comment']= $user['comment'];
 
-        if($user['is_verified'] == 0)
-        {
-            header("Location: under_verification.php");
-            exit();
-        }
+        if(password_verify($password, $user['password'])) {
+        
+            // Store user data in session
+            $_SESSION['id'] = $user['id'];
+            $_SESSION['email'] = $user['email'];
+            $_SESSION['givenname'] = $user['givenname'];
+            $_SESSION['type'] = $user['type'];             
+            $_SESSION['is_verified'] = $user['is_verified'];
+            $_SESSION['comment']= $user['comment'];
 
-        if($user['type'] == 'admin')
-        {
-            header("Location: admin_dashboard.php");
+            if($user['is_verified'] == 0)
+            {
+                header("Location: under_verification.php");
+                exit();
+            }
+
+            if($user['type'] == 'admin')
+            {
+                header("Location: admin_dashboard.php");
+                exit();
+            }
+            else{
+                // Redirect to the dashboard
+            header("Location: dashboard.php");
             exit();
+            }
+        
         }
-        else{
-            // Redirect to the dashboard
-        header("Location: dashboard.php");
-        exit();
-        }
+        
         
     } else {
         // If login fails, show error
         header("Location: index.php?error");
         exit();
     }
+
+    $stmt->close();
 }   
 
 // Close the database connection

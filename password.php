@@ -30,9 +30,11 @@ include "db.php";
     $fileupload = $_SESSION['fileupload'];
     $password = $_POST['password'];
 
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
     // SQL query to insert the user data into the database
     $insert = "INSERT INTO users (givenname, surname, middlename, email, password, phone, address, sex, birthdate, is_verified, type, upload_id ) 
-           VALUES ('$givenname', '$surname', '$middlename', '$email', '$password', '$phone', '$address', '$sex', '$birthdate', 0, 'user','$fileupload')";
+           VALUES ('$givenname', '$surname', '$middlename', '$email', '$hashed_password', '$phone', '$address', '$sex', '$birthdate', 0, 'user','$fileupload')";
 
     
     if (mysqli_query($conn, $insert)) {

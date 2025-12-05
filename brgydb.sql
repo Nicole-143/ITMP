@@ -98,24 +98,6 @@ CREATE TABLE Requests (
 	CONSTRAINT requests_fk_docu FOREIGN KEY (doc_id) REFERENCES document_types(doc_id)
 );
 
--- INSERTING 5 FOR PROCESSING ORDERS --
-INSERT INTO Requests (user_id, doc_id, status, copies, delivery_mode, is_on_behalf, payment_status, payment_mode)
-VALUES
-(2, 1, 'Processing', 1, 'Delivery', 0, 'Paid', 'Wallet'),
-(2, 2, 'Processing', 2, 'Delivery', 0, 'Paid', 'Wallet'),
-(3, 3, 'Processing', 2, 'Delivery', 0, 'Paid', 'Wallet'),
-(3, 4, 'Processing', 2, 'Delivery', 0, 'Paid', 'Wallet'),
-(2, 5, 'Processing', 1, 'Delivery', 0, 'Paid', 'Wallet');
-
--- INSERTING 5 FOR MANAGE SHIPPING --
-INSERT INTO Requests (user_id, doc_id, status, copies, delivery_mode, payment_status, payment_mode)
-VALUES
-(4, 1, 'Ready for Shipping', 1, 'Delivery', 'Pending', 'Cash_On_Delivery'), 
-(4, 3, 'Ready for Shipping', 2, 'Delivery', 'Pending', 'Cash_On_Delivery'), 
-(5, 2, 'Ready for Shipping', 2, 'Delivery', 'Paid', 'Wallet'),
-(6, 4, 'Ready for Shipping', 2, 'Delivery', 'Paid', 'Wallet'),    
-(6, 5, 'Ready for Shipping', 1, 'Delivery', 'Paid', 'Wallet');
-
 CREATE TABLE Payments (
   payment_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,

@@ -19,14 +19,16 @@ $message = '';
 
 if (isset($_GET['approve']) || isset($_GET['deny'])) {
     $request_id = isset($_GET['approve']) ? (int) $_GET['approve'] : (int) $_GET['deny'];
-    $new_status = isset($_GET['approve']) ? 'Approved' : 'Denied';
+    $new_status = isset($_GET['approve']) ? 'Processing' : 'Denied';
 
-    $stmt = $conn->prepare("UPDATE Requests SET status = ? WHERE request_id = ?");
+        $stmt = $conn->prepare("UPDATE Requests SET status = ? WHERE request_id = ?");
     $stmt->bind_param("si", $new_status, $request_id);
 
     if ($stmt->execute()) {
         
-        $_SESSION['message'] = "Request #{$request_id} has been {$new_status}.";
+         $status_message = $new_status == 'Processing' ? 'turned for Processing' : $new_status;
+
+        $_SESSION['message'] = "Request #{$request_id} has been {$status_message}.";
         header("Location: document.php"); // Redirect to document.php
         $stmt->close();
         exit();
@@ -115,6 +117,16 @@ if (isset($_GET['approve']) || isset($_GET['deny'])) {
                         $represented_givenname = strtoupper($row['represented_givenname']);
                         $represented_middlename = strtoupper($row['represented_middlename']);
                         $represented_birthdate = date("m/d/Y", strtotime($row['represented_birthdate']));
+                        
+                        $copies = $row['copies'];
+                        if ($row['payment_mode']== 'Cash_On_Delivery'){
+                            $payment_mode = 'CASH ON DELIVERY';
+                        }
+                        else{
+                                $payment_mode = 'CASH'; // If payment_mode is NULL, show Cash
+                        }
+                        $payment_status = strtoupper($row['payment_status']);
+                        $delivery_mode = strtoupper($row['delivery_mode']);
                         
                     }        
                 
@@ -226,6 +238,18 @@ if (isset($_GET['approve']) || isset($_GET['deny'])) {
             <td class="blue" colspan="3">'.$documentType.'</td>
             <td ><b>For</b></td>
             <td class="blue" >'.$requestType.'</td>
+            </tr>
+            <tr>
+            <td ><b>Payment Mode</b></td>
+            <td class="blue" colspan="3">'.$payment_mode.'</td>
+            <td ><b>Payment Status</b></td>
+            <td class="blue" >'.$payment_status.'</td>
+            </tr>
+            <tr>
+            <td ><b>Delivery Mode</b></td>
+            <td class="blue" colspan="3">'.$delivery_mode.'</td>
+            <td ><b>Number of Copies</b></td>
+            <td class="blue" >'.$copies.'</td>
             </tr>
             
             </table>

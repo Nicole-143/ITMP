@@ -126,7 +126,11 @@ $conn->close();
 
                 <div class="bottom doc-btns">
                     <a href="dashboard.php" class="back-btn">Back to Home</a>
-                    <?php if ($request_count < 3): ?>
+                    <?php if ($request_count < 3): 
+                        $_SESSION['request_limit_reached'] = false;
+                        
+                        ?>
+                        
                         <a href="request_for.php?request=<?php echo $id; ?>" class="request-btn">Request to Document</a>
                     <?php else: 
                         $_SESSION['request_limit_reached'] = true;

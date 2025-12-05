@@ -79,16 +79,17 @@ $conn->close();
                 <td>
                 <h3>Door-to-door Delivery</h3>
                 <p>Your document will be delivered straight to your delivery address</p>
-                <a href="delivery.php?doortodoor=<?php echo $id; ?>">Next</a>
+                <a href="checkout.php?doortodoor=<?php echo $id; ?>">Next</a>
                 </td>
                 <td>
                 <h3>Pick-up</h3>  
                 <p>You may pick up your document at the barangay hall during regular office hours</p>  
-                <a href="delivery.php?pickup=<?php echo $id; ?>">Next</a>
+                <a href="checkout.php?pickup=<?php echo $id; ?>">Next</a>
                 </td>
             </tr>
         </table>
         
     </div>
+
 </body>
 </html>

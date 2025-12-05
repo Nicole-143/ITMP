@@ -1,9 +1,6 @@
 <?php
 session_start();
 
-// 🔍 SHOW ERRORS WHILE DEBUGGING
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
 include "db.php";
 
@@ -42,6 +39,17 @@ if (isset($_GET['process'])) {
 
     $is_on_behalf = !empty($_SESSION['on_behalf']) ? 1 : 0;
 
+    if ($_SESSION['on_behalf']==1){
+        $represented_surname = $_SESSION['represented_surname'];
+        $represented_givenname = $_SESSION['represented_givenname'];
+        $represented_middlename = $_SESSION['represented_middlename'];
+        $represented_birthdate = $_SESSION['represented_birthdate'];
+        $represented_relationship = $_SESSION['relationship'];
+    } else {
+    // If not on behalf, set to NULL
+    $represented_surname = $represented_givenname = $represented_middlename = $represented_birthdate = $represented_relationship = NULL;
+    }
+
     // Payment status logic
     if ($delivery_mode == 'Pick-up' || $payment_mode == 'Cash_On_Delivery') {
         $payment_status = 'Pending';
@@ -54,9 +62,11 @@ if (isset($_GET['process'])) {
 
     $sql = "
         INSERT INTO Requests 
-        (user_id, doc_id, request_date, status, delivery_mode, payment_mode, copies, is_on_behalf, payment_status, shipping_date, arrival_date)
+        (user_id, doc_id, request_date, status, delivery_mode, payment_mode, copies, is_on_behalf, represented_surname, represented_givenname, represented_middlename, 
+     represented_birthdate, represented_relationship, payment_status, shipping_date, arrival_date)
         VALUES
-        ('$user_id', '$doc_id', '$request_date', '$status', '$delivery_mode', $payment_mode_sql, '$copies', '$is_on_behalf', '$payment_status', NULL, NULL)
+        ('$user_id', '$doc_id', '$request_date', '$status', '$delivery_mode', $payment_mode_sql, '$copies', '$is_on_behalf', '$represented_surname', '$represented_givenname', 
+     '$represented_middlename', '$represented_birthdate', '$represented_relationship', '$payment_status', NULL, NULL)
     ";
 
     if (!mysqli_query($conn, $sql)) {

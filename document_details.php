@@ -63,7 +63,7 @@ $conn->close();
                             if (isset($_GET['view'])) {
                                 $id = $_GET['view'];     
                                 
-                            $sql_doc = "SELECT doc_name FROM dashboard_documents WHERE doc_id = $id";
+                            $sql_doc = "SELECT doc_name FROM document_types WHERE doc_id = $id";
                             $doc_result = mysqli_query($conn, $sql_doc);
                             if($doc_row = mysqli_fetch_row($doc_result)){
                                         $doc_name = $doc_row[0];
@@ -73,15 +73,17 @@ $conn->close();
                             echo'<h2 class="htop">Eligibility</h2>
                             <ul>
                                 <li>Resident of the Philippines</li>
-                                <li>18 years old and above</li>
-                                <li>Individuals who have earned salaries for at least 30 consecutive working days</li>
-                                <li>Those who have a real estate property of a collective asset value of PHP 1,000 and above within the city</li>
+                                <li>18 years old and above (For minors, application must be assisted by a parent or legal guardian)</li>
+                                <li>Individuals who have earned income for at least 30 consecutive working days</li>
+                                <li>Those who own real estate or collective assets with a total value of PHP 1,000 and above within the city</li>
                                 <li>Those who are required by the law to file income tax returns</li>
                             </ul>';
                             echo'<h2 class="htop">Requirements</h2>
                             <ul>';
-                            $sql = "SELECT req_name FROM user_documents
-                                    WHERE doc_id = $id";
+                            $sql = "SELECT r.req_name 
+                                    FROM requirements r
+                                    JOIN Doc_Type_Requirements dtr ON r.req_id = dtr.req_id
+                                    WHERE dtr.doc_id = $id;";
 
                             $result = mysqli_query($conn, $sql);
 

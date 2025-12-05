@@ -129,7 +129,7 @@ $conn->close();
                 
             <form action="checkout_confirm.php?pay=<?php echo $id ?>" method="POST"> 
                 <div class="checkbox-container">
-                    <input type="checkbox" id="on-behalf" name="on-behalf" value="on-behalf">
+                    <input type="checkbox" id="on-behalf" name="on-behalf" value="on-behalf" required>
                     <label for="on-behalf">I confirm</label>
                 </div>
 
@@ -141,4 +141,5 @@ $conn->close();
         </div>
     </div>
 </body>
+
 </html>

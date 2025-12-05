@@ -15,19 +15,22 @@ if ($_SESSION['is_verified'] == 0 && $_SESSION['type'] == 'user') {
     exit();
 }
 
-if (isset($_GET['pay'])) {
-    $id = $_GET['pay'];
-    
-} 
+if (isset($_GET['pickup'])) {
+    $id = $_GET['pickup'];
+} else {
+   $id=$_GET['doortodoor'];
+}
 
  
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    $_SESSION['delivery_mode'] = isset($_GET['pickup']) ? 'Pick-up' : 'Delivery';
     $copies = $_POST['copies'];
     $_SESSION['copies'] = $copies;
-    
-    header("Location: checkout_confirm.php?pay=" . $id); 
-        exit();
+    header("Location: checkout_confirm.php?pay=".$id); 
+    exit();
    
+    
       
 }
 
@@ -66,7 +69,8 @@ $conn->close();
 
     <div class="main-page">
        <div class="form-box request-box valid-id">       
-       <form action="checkout.php?pay=<?php echo $id?>" method="POST">
+        
+       <form action="checkout.php?<?php echo isset($_GET['pickup']) ? 'pickup=' . $id : 'doortodoor=' . $id; ?>" method="POST">
                 <h1>Checkout</h1>
                 <p class="reminder-content title">Reminder:</p>
                 <p class="reminder-content">Avoid transacting with online scammers! Barangay Townsville <b>DOES NOT</b> coordinate transactions and payment through FB messenger. No additional fees will be charged aside from what is indicated on your order.</p>
@@ -93,5 +97,6 @@ $conn->close();
 
         
     </div>
+
 </body>
 </html>

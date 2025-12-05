@@ -222,8 +222,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         }
                     }
 
-                    // Extra requirements for senior / relative
-                    if ($_SESSION['docType'] == 'senior' || $_SESSION['docType'] == 'relative') {
+                    // Extra requirements for senior / relative / guardian
+                    if ($_SESSION['docType'] == 'senior' || $_SESSION['docType'] == 'relative'|| $_SESSION['docType'] == 'guardian') {
                         $extra_req_ids = [4, 5, 6];
                         foreach ($extra_req_ids as $req_id) {
                             $res = mysqli_query($conn, "SELECT req_name FROM requirements WHERE req_id = $req_id");
@@ -249,5 +249,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
         </div>
     </div>
+
 </body>
 </html>

@@ -19,8 +19,10 @@ $message = '';
 
 if (isset($_GET['approve']) || isset($_GET['deny'])) {
     $request_id = isset($_GET['approve']) ? (int) $_GET['approve'] : (int) $_GET['deny'];
-    $new_status = isset($_GET['approve']) ? 'Processing' : 'Denied';
 
+    
+    $new_status = isset($_GET['approve']) ? 'Processing' : 'Denied';
+    
         $stmt = $conn->prepare("UPDATE Requests SET status = ? WHERE request_id = ?");
     $stmt->bind_param("si", $new_status, $request_id);
 

@@ -14,9 +14,18 @@ if ($_SESSION['is_verified'] == 0 && $_SESSION['type'] == 'user') {
     exit();
 }
 
+
+
 if (isset($_GET['request'])) {
     $id = $_GET['request'];
 }
+
+if (isset($_SESSION['request_limit_reached']) && $_SESSION['request_limit_reached'] == true) {
+    
+    header("Location: document_details.php?view=$id");
+    exit();
+}
+
 
 if (isset($_GET['own'])) {
     $_SESSION['docType'] = 'own';

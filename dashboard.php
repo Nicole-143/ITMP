@@ -19,6 +19,12 @@ if ($_SESSION['is_verified'] == 0 && $_SESSION['type'] == 'user') {
     exit();
 }
 
+if (!isset($_SESSION['last_request_date']) || $_SESSION['last_request_date'] != date('Y-m-d')) {
+    // Reset document limit for a new day
+    $_SESSION['request_limit_reached'] = false;
+    $_SESSION['last_request_date'] = date('Y-m-d');
+}
+
 $givenname = $_SESSION['givenname']; 
 
 // Close the database connection

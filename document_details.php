@@ -15,6 +15,28 @@ if ($_SESSION['is_verified'] == 0 && $_SESSION['type'] == 'user') {
     exit();
 }
 
+$user_id = $_SESSION['id'];
+
+$sql_count = "
+    SELECT COUNT(*) AS request_count
+    FROM Requests
+    WHERE user_id = $user_id
+      AND DATE(request_date) = CURDATE()
+      AND status IN ('Pending', 'Approved', 'Processing', 'Ready for Shipping', 'Shipping', 'Ready for Pick-up', 'Released')
+";
+
+$result_count = mysqli_query($conn, $sql_count);
+
+$request_count = 0;
+if ($result_count) {
+    $row_count = mysqli_fetch_assoc($result_count);
+    $request_count = $row_count['request_count'];
+}
+
+if ($request_count >= 3) {
+    $_SESSION['request_limit_reached'] = true; // track the limit status
+}
+
 
 // Close the database connection
 $conn->close();
@@ -51,13 +73,14 @@ $conn->close();
 
 
     <div class="main-page">
+
        <div class="form-box register-box ">
                 <div class="stretch-page">
                 <div class="top-list">
                 
                     
                         <?php
-    
+                            
                             include "db.php"; 
 
                             if (isset($_GET['view'])) {
@@ -103,7 +126,15 @@ $conn->close();
 
                 <div class="bottom doc-btns">
                     <a href="dashboard.php" class="back-btn">Back to Home</a>
-                    <a href="request_for.php?request=<?php echo $id; ?>" class="request-btn">Request to Document</a>
+                    <?php if ($request_count < 3): ?>
+                        <a href="request_for.php?request=<?php echo $id; ?>" class="request-btn">Request to Document</a>
+                    <?php else: 
+                        $_SESSION['request_limit_reached'] = true;
+                        ?>
+                        <button class="request-btn disabled" disabled>
+                            Daily Document Requests Limit Reached
+                        </button>
+                    <?php endif?>   
                 </div>
         </div>
 </div>

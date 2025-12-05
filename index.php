@@ -24,8 +24,7 @@ if (isset($_POST['submit'])) {
 
         $user = mysqli_fetch_array($result); 
 
-        if(password_verify($password, $user['password'])) {
-        
+        if(password_verify($password, $user['password'])){
             // Store user data in session
             $_SESSION['id'] = $user['id'];
             $_SESSION['email'] = $user['email'];
@@ -89,9 +88,9 @@ $conn->close();
         </div>
     <nav class="navigation-menu">
         <ul>
-            <li>About</li>
-            <li>FAQS</li>
-            <li>Contact Us</li>
+            <li><a href="about.php">About</a></li>
+            <li><a href="faq.php">FAQS</a></li></li>
+            <li><a href="contact.php">Contact Us</a></li>
             <li><a href="register.php" onclick="">Register</a></li>
             <li><a href="index.php" onclick="">Login</a></li>
         </ul>

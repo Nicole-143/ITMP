@@ -1128,6 +1128,9 @@ textarea:focus {
     margin-top:20px;
 }
 
+.top-spacer{
+    margin-top:5px;
+}
 .bottom-space{
     margin-bottom:20px;
 }

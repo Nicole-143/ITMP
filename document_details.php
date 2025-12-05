@@ -63,7 +63,7 @@ $conn->close();
                             if (isset($_GET['view'])) {
                                 $id = $_GET['view'];     
                                 
-                            $sql_doc = "SELECT doc_name FROM document_types WHERE doc_id = $id";
+                            $sql_doc = "SELECT doc_name FROM dashboard_documents WHERE doc_id = $id";
                             $doc_result = mysqli_query($conn, $sql_doc);
                             if($doc_row = mysqli_fetch_row($doc_result)){
                                         $doc_name = $doc_row[0];
@@ -80,10 +80,9 @@ $conn->close();
                             </ul>';
                             echo'<h2 class="htop">Requirements</h2>
                             <ul>';
-                            $sql = "SELECT r.req_name 
-                                    FROM requirements r
-                                    JOIN Doc_Type_Requirements dtr ON r.req_id = dtr.req_id
-                                    WHERE dtr.doc_id = $id;";
+                            $sql = "SELECT req_name 
+                                    FROM document_requirements
+                                    WHERE doc_id = $id;";
 
                             $result = mysqli_query($conn, $sql);
 

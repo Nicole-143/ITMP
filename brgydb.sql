@@ -76,16 +76,16 @@ CREATE TABLE Users(
 -- ADMIN ---
 INSERT INTO Users (givenname, surname, middlename, email, password, phone, address, sex, birthdate, is_verified, type, upload_id, registerdate)
 VALUES
-('Admin Ding', 'Chong', 'Arroyo', 'ding_chong@gmail.com', 'AdminShh04!', '09123456789', '143 Taft Avenue St., Brgy. A', 'Female', '2005-11-12', 1, 'admin', 'logo.jpg', CURRENT_TIMESTAMP());
+('Admin Ding', 'Chong', 'Arroyo', 'ding_chong@gmail.com', '$2y$10$2w7Fefo4CRBk5GCbSfqF8OlL1weu6x71x0.AuKjiZ6zNV0.hxz6Zq!', '09123456789', '143 Taft Avenue St., Brgy. A', 'Female', '2005-11-12', 1, 'admin', 'logo.jpg', CURRENT_TIMESTAMP());
 
 -- 5 VERIFIED USERS --
 INSERT INTO Users (givenname, surname, middlename, email, password, phone, address, sex, birthdate, is_verified, type, upload_id, registerdate)
 VALUES
-('Maria', 'Santos', 'Reyes', 'maria.santos@email.com', 'SecurePass123!', '09171234567', '143 Maganda St., Brgy. A', 'Female', '1990-05-15', 1, 'user', 'logo.jpg', CURRENT_TIMESTAMP()),
-('Jose', 'Dela Cruz', 'López', 'jose.dcruz@email.com', 'SecurePass123!', '09187654321', '22 Balikatan Ave., Brgy. A', 'Male', '1985-11-20', 1, 'user', 'logo.jpg', CURRENT_TIMESTAMP()),
-('Carla', 'Garcia', 'Perez', 'carla.garcia@email.com', 'SecurePass123!', '09998887777', '99 Masipag Corner, Brgy. A', 'Female', '2001-02-28', 1, 'user', 'logo.jpg', CURRENT_TIMESTAMP()),
-('Benito', 'Ramos', 'Torres', 'benito.ramos@email.com', 'SecurePass123!', '09205554444', '1 Puso Rd., Brgy. A', 'Male', '1976-08-01', 1, 'user', 'logo.jpg', CURRENT_TIMESTAMP()),
-('Sofia', 'Mendoza', 'Cruz', 'sofia.mendoza@email.com', 'SecurePass123!', '09051112222', '30 Araw St., Brgy. A', 'Female', '1995-04-10', 1, 'user', 'logo.jpg', CURRENT_TIMESTAMP());
+('Maria', 'Santos', 'Reyes', 'maria.santos@email.com', '$2y$10$2w7Fefo4CRBk5GCbSfqF8OlL1weu6x71x0.AuKjiZ6zNV0.hxz6Zq!', '09171234567', '143 Maganda St., Brgy. A', 'Female', '1990-05-15', 1, 'user', 'logo.jpg', CURRENT_TIMESTAMP()),
+('Jose', 'Dela Cruz', 'López', 'jose.dcruz@email.com', '$2y$10$2w7Fefo4CRBk5GCbSfqF8OlL1weu6x71x0.AuKjiZ6zNV0.hxz6Zq!', '09187654321', '22 Balikatan Ave., Brgy. A', 'Male', '1985-11-20', 1, 'user', 'logo.jpg', CURRENT_TIMESTAMP()),
+('Carla', 'Garcia', 'Perez', 'carla.garcia@email.com', '$2y$10$2w7Fefo4CRBk5GCbSfqF8OlL1weu6x71x0.AuKjiZ6zNV0.hxz6Zq!', '09998887777', '99 Masipag Corner, Brgy. A', 'Female', '2001-02-28', 1, 'user', 'logo.jpg', CURRENT_TIMESTAMP()),
+('Benito', 'Ramos', 'Torres', 'benito.ramos@email.com', '$2y$10$2w7Fefo4CRBk5GCbSfqF8OlL1weu6x71x0.AuKjiZ6zNV0.hxz6Zq!', '09205554444', '1 Puso Rd., Brgy. A', 'Male', '1976-08-01', 1, 'user', 'logo.jpg', CURRENT_TIMESTAMP()),
+('Sofia', 'Mendoza', 'Cruz', 'sofia.mendoza@email.com', '$2y$10$2w7Fefo4CRBk5GCbSfqF8OlL1weu6x71x0.AuKjiZ6zNV0.hxz6Zq!', '09051112222', '30 Araw St., Brgy. A', 'Female', '1995-04-10', 1, 'user', 'logo.jpg', CURRENT_TIMESTAMP());
 
 CREATE TABLE Requests (
 	request_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -97,11 +97,6 @@ CREATE TABLE Requests (
     payment_mode ENUM('Cash_On_Delivery','Wallet') DEFAULT NULL,
     copies INT NOT NULL,
     is_on_behalf TINYINT NOT NULL DEFAULT 0,
-    represented_surname VARCHAR(255) NULL,
-    represented_givenname VARCHAR(255) NULL,
-    represented_middlename VARCHAR(255) NULL,
-    represented_birthdate DATE NULL,
-    represented_relationship ENUM('relative','senior') NULL,
     payment_status ENUM('Pending', 'Paid', 'Refunded') NOT NULL DEFAULT 'Pending',
     shipping_date DATETIME DEFAULT NULL, 
     arrival_date DATETIME DEFAULT NULL,
@@ -156,6 +151,10 @@ CREATE TABLE Wallet (
 );
 
 -- VIEWS --
+CREATE VIEW view_users AS
+SELECT id, givenname, surname, middlename, email, phone, is_verified, type 
+FROM Users ORDER BY id ASC;
+
 CREATE VIEW manage_shipments AS
 SELECT r.request_id, u.surname, u.givenname, u.middlename, r.status, r.request_date, r.shipping_date, r.arrival_date
 FROM Requests r
@@ -181,6 +180,11 @@ CREATE VIEW dashboard_documents AS
 SELECT doc_id, doc_name, description
 FROM document_types
 WHERE status = 'Active';
+
+CREATE VIEW user_documents AS
+SELECT r.req_name, dtr.doc_id
+FROM doc_type_requirements dtr
+JOIN requirements r ON dtr.req_id = r.req_id;
 
 CREATE VIEW document_requirements AS
 SELECT r.req_name, dtr.doc_id

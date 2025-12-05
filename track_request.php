@@ -99,6 +99,8 @@ if ($_SESSION['is_verified'] == 0 && $_SESSION['type'] == 'user') {
 
                         if ($row[4]== 'Cash_On_Delivery'){
                             $payment_mode = 'Cash On Delivery';
+                        }else if ($row[4]== 'Wallet'){
+                            $payment_mode = 'Wallet';
                         }
                         else{
                                 $payment_mode = 'Cash'; // If payment_mode is NULL, show Cash

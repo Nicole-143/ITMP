@@ -20,15 +20,48 @@ $message = '';
 if (isset($_GET['approve']) || isset($_GET['deny'])) {
     $request_id = isset($_GET['approve']) ? (int) $_GET['approve'] : (int) $_GET['deny'];
 
-    
     $new_status = isset($_GET['approve']) ? 'Processing' : 'Denied';
     
+    //Get details on the document request
+    $query = "SELECT user_id, payment_status, doc_id, copies FROM Requests WHERE request_id = $request_id";
+    $result = $conn->query($query);
+    $row = $result->fetch_array(); 
+    $user_id = $row['user_id'];
+    $payment_status = $row['payment_status'];
+    $doc_id = $row['doc_id'];
+    $copies = $row['copies'];
+
+    if ($new_status == 'Denied' && $payment_status == 'Paid') {
+        
+        //If for refund, get doc_type again for the shipping fee at price
+        $query = "SELECT price, shipping_fee FROM Document_Types WHERE doc_id = $doc_id";
+        $result = $conn->query($query);
+        $row = $result->fetch_array();  
+        $price = $row['price'];
+        $shipping_fee = $row['shipping_fee'];
+        
+        $total_refund = ($price * $copies) + $shipping_fee;
+
+        // Add a refund transaction to payments table
+        $query = "INSERT INTO payments (user_id, amount, transaction_type, request_id) 
+                  VALUES ($user_id, $total_refund, 'Refund', $request_id)";
+        $conn->query($query);
+
+        // Refund to user's wallet balance
+        $query = "UPDATE wallet SET balance = balance + $total_refund WHERE user_id = $user_id";
+        $conn->query($query);
+
+        $query = "UPDATE requests SET payment_status = 'Refunded' WHERE request_id = $request_id";
+        $conn->query($query);
+
+        }    
+
         $stmt = $conn->prepare("UPDATE Requests SET status = ? WHERE request_id = ?");
-    $stmt->bind_param("si", $new_status, $request_id);
+        $stmt->bind_param("si", $new_status, $request_id);
 
     if ($stmt->execute()) {
         
-         $status_message = $new_status == 'Processing' ? 'turned for Processing' : $new_status;
+        $status_message = $new_status == 'Processing' ? 'turned for Processing' : $new_status;
 
         $_SESSION['message'] = "Request #{$request_id} has been {$status_message}.";
         header("Location: document.php"); // Redirect to document.php
@@ -123,6 +156,8 @@ if (isset($_GET['approve']) || isset($_GET['deny'])) {
                         $copies = $row['copies'];
                         if ($row['payment_mode']== 'Cash_On_Delivery'){
                             $payment_mode = 'CASH ON DELIVERY';
+                        }else if ($row['payment_mode']== 'Wallet'){
+                            $payment_mode = 'WALLET';
                         }
                         else{
                                 $payment_mode = 'CASH'; // If payment_mode is NULL, show Cash

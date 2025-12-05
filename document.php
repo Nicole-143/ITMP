@@ -106,6 +106,8 @@ $result = $conn->query($sql);
                     $delivery_mode  = $row['delivery_mode'];
                     if ($row['payment_mode']== 'Cash_On_Delivery'){
                             $payment_mode = 'Cash On Delivery';
+                        }else if ($row['payment_mode']== 'Wallet'){
+                            $payment_mode = 'Wallet';
                         }
                         else{
                                 $payment_mode = 'Cash'; // If payment_mode is NULL, show Cash

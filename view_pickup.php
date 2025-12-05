@@ -15,6 +15,7 @@ if (isset($_POST['update_pickup'])) {
     $pickup_status = $_POST['pickup_status'];
     $pickup_date = !empty($_POST['pickup_date']) ? "'" . $_POST['pickup_date'] . "'" : "NULL";
 
+
     // If picked up → also set status to Released
     if ($pickup_status == "Picked Up") {
         $sql = "
@@ -25,6 +26,8 @@ if (isset($_POST['update_pickup'])) {
                 payment_status = 'Paid'
             WHERE request_id = $request_id
         ";
+
+
     } else {
         // If changed back to Not Picked Up
         $sql = "

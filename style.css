@@ -1216,15 +1216,16 @@ p.bottom-space{
 /*Track Request Styles*/
 
 .user-table{
-    margin-top:20px;
     border-collapse: collapse;
     width:100%;
+    
+    
 }
 
 
 .user-table th, .user-table td{
     border: 1px solid var(--header-color); 
-    padding: 8px; 
+    padding: 20px 8px;
     text-align:center;
     
 }
@@ -1232,6 +1233,7 @@ p.bottom-space{
 .user-table .head th{
     background-color: var(--header-color);
     color:white;
+    
 }
 
 .user-table tr:nth-child(odd) {

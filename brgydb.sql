@@ -2,37 +2,6 @@
 CREATE DATABASE brgydb DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE brgydb;
 
-CREATE TABLE `admin_shipments` (
-`request_id` int(11)
-,`surname` varchar(255)
-,`givenname` varchar(255)
-,`middlename` varchar(255)
-,`phone` varchar(255)
-,`email` varchar(255)
-,`address` varchar(255)
-,`status` enum('Pending','Approved','Denied','Processing','Ready for Shipping','Shipping','Ready for Pick-up','Released')
-,`request_date` datetime
-,`shipping_date` datetime
-,`arrival_date` datetime
-,`payment_mode` enum('Cash_On_Delivery','Wallet')
-,`payment_status` enum('Pending','Paid','Refunded')
-,`doc_name` varchar(255)
-,`copies` int(11)
-,`price` decimal(10,2)
-,`shipping_fee` decimal(10,2)
-);
-
-CREATE TABLE `dashboard_documents` (
-`doc_id` int(11)
-,`doc_name` varchar(255)
-,`description` varchar(255)
-);
-
-CREATE TABLE `document_requirements` (
-`req_name` varchar(255)
-,`doc_id` int(11)
-);
-
 CREATE TABLE document_types (
   doc_id int(11) NOT NULL,
   doc_name varchar(255) NOT NULL,
@@ -65,24 +34,6 @@ INSERT INTO doc_type_requirements (doc_id, req_id) VALUES(3, 3);
 INSERT INTO doc_type_requirements (doc_id, req_id) VALUES(5, 1);
 INSERT INTO doc_type_requirements (doc_id, req_id) VALUES(5, 2);
 INSERT INTO doc_type_requirements (doc_id, req_id) VALUES(6, 7);
-CREATE TABLE `manage_documents` (
-`doc_id` int(11)
-,`doc_name` varchar(255)
-,`description` varchar(255)
-,`price` decimal(10,2)
-,`shipping_fee` decimal(10,2)
-,`status` enum('Active','Inactive')
-);
-CREATE TABLE `manage_shipments` (
-`request_id` int(11)
-,`surname` varchar(255)
-,`givenname` varchar(255)
-,`middlename` varchar(255)
-,`status` enum('Pending','Approved','Denied','Processing','Ready for Shipping','Shipping','Ready for Pick-up','Released')
-,`request_date` datetime
-,`shipping_date` datetime
-,`arrival_date` datetime
-);
 
 CREATE TABLE payments (
   payment_id int(11) NOT NULL,
@@ -167,16 +118,6 @@ INSERT INTO users (id, givenname, surname, middlename, email, password, phone, a
 INSERT INTO users (id, givenname, surname, middlename, email, password, phone, address, sex, birthdate, is_verified, type, upload_id, registerdate, comment) VALUES(3, 'Barbie', 'Reyes', 'Benez', 'barbie@gmail.com', '$2y$10$e4yCb4lJGSvgY6w3Jl/G2OYCB95hFKPEr0kGwlxZL93fIjsWtEG3a', '09562043378', '722 Rainbow Lane, Brgy. Townsville, Megaville City', 'Female', '2001-10-21', 0, 'user', 'id3.png', '2025-12-06 02:08:25', NULL);
 INSERT INTO users (id, givenname, surname, middlename, email, password, phone, address, sex, birthdate, is_verified, type, upload_id, registerdate, comment) VALUES(4, 'Blossy', 'Cruz', 'Mae', 'blossy@yahoo.com', '$2y$10$iNpaLwwKgT5M/tUWSGaz7eKGj76eZTzFo58yBe.v9x8fPbt.9B22.', '09918736642', '55 Toughleaf Drive, Brgy. Townsville, Megaville City', 'Female', '2002-12-13', 0, 'user', 'id4.png', '2025-12-06 02:11:56', NULL);
 INSERT INTO users (id, givenname, surname, middlename, email, password, phone, address, sex, birthdate, is_verified, type, upload_id, registerdate, comment) VALUES(5, 'Drake', 'Utonium', 'Prof', 'prof_utonium@gmail.com', '$2y$10$TrIUOC0V97xllq3D2CB0yujy0QkKV.6ctP4PZ3xQekaZTlodqI2KC', '09159981403', '100 Chemical X Avenue, Brgy. Townsville, Megaville City', 'Male', '1975-03-17', 0, 'user', 'id5.png', '2025-12-06 02:15:04', NULL);
-CREATE TABLE `view_users` (
-`id` int(11)
-,`givenname` varchar(255)
-,`surname` varchar(255)
-,`middlename` varchar(255)
-,`email` varchar(255)
-,`phone` varchar(255)
-,`is_verified` tinyint(4)
-,`type` enum('admin','user')
-);
 
 CREATE TABLE wallet (
   user_id int(11) NOT NULL,
@@ -198,7 +139,7 @@ CREATE VIEW document_requirements  AS SELECT r.req_name AS `req_name`, dtr.doc_i
 
 CREATE VIEW manage_documents  AS SELECT dt.doc_id AS `doc_id`, dt.doc_name AS `doc_name`, dt.description AS `description`, dt.price AS `price`, dt.shipping_fee AS `shipping_fee`, dt.`status` AS `status` FROM document_types AS `dt` ;
 
-CREATE VIEW manage_shipments  AS SELECT r.request_id AS `request_id`, u.surname AS `surname`, u.givenname AS `givenname`, u.middlename AS `middlename`, r.`status` AS `status`, r.request_date AS `request_date`, r.shipping_date AS `shipping_date`, r.arrival_date AS `arrival_date` FROM (requests r left join users u on(u.`id` = r.user_id)) WHERE r.delivery_mode = 'Delivery' AND r.`status` = 'Ready for Shipping' OR r.`status` = 'Shipping' OR r.`status` = 'Released' ;
+CREATE VIEW manage_shipments  AS SELECT r.request_id AS `request_id`, u.surname AS `surname`, u.givenname AS `givenname`, u.middlename AS `middlename`, r.`status` AS `status`, r.request_date AS `request_date`, r.shipping_date AS `shipping_date`, r.arrival_date AS `arrival_date` FROM (requests r left join users u on(u.`id` = r.user_id)) WHERE r.delivery_mode = 'Delivery' AND (r.`status` = 'Ready for Shipping' OR r.`status` = 'Shipping' OR r.`status` = 'Released' );
 
 
 CREATE VIEW view_users  AS SELECT users.`id` AS `id`, users.givenname AS `givenname`, users.surname AS `surname`, users.middlename AS `middlename`, users.email AS `email`, users.phone AS `phone`, users.is_verified AS `is_verified`, users.`type` AS `type` FROM users ORDER BY users.`id` ASC ;

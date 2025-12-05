@@ -1,6 +1,6 @@
 
 <?php 
-include "db.php";
+    include "db.php";
     session_start(); 
 
     
@@ -10,6 +10,7 @@ include "db.php";
     }
 
     $doc_id = $_GET['id'];
+    $id_delete = $doc_id; //for delete logic
 
     // Fetch document details from the database
     $sql = "SELECT * FROM manage_documents WHERE doc_id = ?";
@@ -30,8 +31,38 @@ include "db.php";
     $status = $row['status'];
 
     $stmt->close();
-    $conn->close();
-   
+
+    // Deletion logic
+    if (isset($_POST['delete'])) {
+        $conn->begin_transaction();
+
+        try{
+            //delete the requirements associated with the document
+            $sql_req_delete = "DELETE FROM Doc_Type_Requirements WHERE doc_id= ?";
+            $stmt_req_delete = $conn->prepare($sql_req_delete);
+            $stmt_req_delete->bind_param("i", $id_delete);
+            $stmt_req_delete->execute();
+            $stmt_req_delete->close();
+
+            //delete the document
+            $sql_delete = "DELETE FROM Document_Types WHERE doc_id= ?";
+            $stmt_delete = $conn->prepare($sql_delete);
+            $stmt_delete->bind_param("i", $id_delete);
+            $stmt_delete->execute();
+            $stmt_delete->close();
+
+            $conn->commit();
+            header("Location: manage_documents.php");
+            exit();
+        } catch (mysqli_sql_exception $e){ {
+            $conn->rollback();
+            echo "Error deleting record: " . $e->getMessage();
+        }
+        }
+    }
+
+//    $conn->close();
+    
 ?>
 
 
@@ -67,11 +98,11 @@ include "db.php";
 
         <div class="page-container">
         <h2><a href="manage_documents.php"><b>&lt;-</b></a></h2>
-        <h2>Official Document Catalog</h2>
+        <h2>Official Document Catalog - Delete Document</h2>
         </div>
 
         <div class="info-container shipping-box top-space">
-                <h1>Official Document Catalog</h1>
+                <h3 class="confirm">Are you sure, you want to delete this document?</h3>
                 <div class="order-summary"> 
                     <table class="order-table">
                         <tr>
@@ -104,11 +135,6 @@ include "db.php";
                         <table class="item-table">
 
                             <?php
-                            include "db.php";
-                            if($conn->connect_error){
-                                die("Connection failed: " . $conn->connect_error);
-                            }
-
                             //get the requirement/s foc that document
                             $sql_req = "SELECT req_name FROM document_requirements WHERE doc_id = ?";
                             $stmt = $conn->prepare($sql_req);
@@ -148,15 +174,12 @@ include "db.php";
         
         </div>
 
-        <div class="bottom doc-btns">
-            <a href="admin_delete_documents.php?id=<?php echo $id;?>" class="back-btn">Delete Permanently</a>
-            <a href="admin_update_documents.php?id=<?php echo $id;?>" class="action-btn">Edit Document</a>
-        </div>
+        <form method="POST" action="admin_delete_documents.php?id=<?php echo $id; ?>" class="bottom doc-btns">
+            <a href="admin_documents.php?id=<?php echo $id;?>" class="back-btn">Cancel</a>
+            <button type="submit" name="delete" class="delete-btn">Delete Permanently</button>
+        </form>
 
     </div>
-    
-    
-    
 
 </body>
 </html>

@@ -32,6 +32,7 @@ $sql = "
         r.delivery_mode,
         r.payment_mode,
         r.payment_status,
+        r.status,
         d.doc_name,
         u.surname,
         u.givenname,
@@ -39,7 +40,7 @@ $sql = "
     FROM Requests r
     JOIN Users u ON r.user_id = u.id
     JOIN Document_Types d ON r.doc_id = d.doc_id
-    WHERE r.status = 'Pending'
+    WHERE r.status = 'Pending' OR r.status = 'Processing'
     ORDER BY r.request_date DESC
 ";
 
@@ -93,6 +94,7 @@ $result = $conn->query($sql);
                 <th>Delivery Mode</th>
                 <th>Payment Mode</th>
                 <th>Payment Status</th>
+                <th>Order Status</th>
                 <th>Request Date</th>
                 <th>Action</th>
             </tr>
@@ -113,6 +115,7 @@ $result = $conn->query($sql);
                                 $payment_mode = 'Cash'; // If payment_mode is NULL, show Cash
                         }
                     $payment_status = $row['payment_status'];
+                    $order_status = $row['status'];
                     $doc_name       = $row['doc_name'];
 
                     $surname    = $row['surname'];
@@ -121,6 +124,11 @@ $result = $conn->query($sql);
                     $middleinit = strtoupper(substr($middle, 0, 1));
 
                     $requested_by = "{$surname}, {$given} {$middleinit}.";
+                    
+                    $link_page = 'view_request.php';
+                    if ($order_status == 'Processing') {
+                        $link_page = 'document_processing.php';
+                    }
                     ?>
                     <tr>
                         <td><?php echo htmlspecialchars($requested_by); ?></td>
@@ -128,9 +136,10 @@ $result = $conn->query($sql);
                         <td><?php echo htmlspecialchars($delivery_mode); ?></td>
                         <td><?php echo htmlspecialchars($payment_mode); ?></td>
                         <td><?php echo htmlspecialchars($payment_status); ?></td>
+                        <td><?php echo htmlspecialchars($order_status); ?></td>
                         <td><?php echo htmlspecialchars($request_date); ?></td>
                         <td>
-                            <a href='view_request.php?view=<?php echo $request_id ?>' class='text-blue'>View Details</a>   
+                            <a href='<?php echo $link_page; ?>?view=<?php echo $request_id ?>' class='text-blue'>View Details</a>   
                         </td>
                     </tr>
                     <?php

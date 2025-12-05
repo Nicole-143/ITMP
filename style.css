@@ -574,6 +574,15 @@ textarea:focus {
     margin-bottom: 10px;
 }
 
+.info-table.request {
+    width: 100%;
+    table-layout: fixed;  
+    border-collapse: collapse; 
+    font-size: 18px;
+    margin-bottom: 10px;
+    border-spacing: 0;  
+}
+
 
 .info-table.user{
     margin-bottom: 0;  
@@ -597,12 +606,30 @@ textarea:focus {
 
 .deny-btn{
     background-color: #B71D1D;
-    border:1px solid #B3B3B3;
+    color: #ffffff;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 6px;
+    outline: none;
+    border: none;
+    width: 100%;
+    height: 40px;
+    text-align:center;
+    text-decoration: none;
 }
 
 .approve-btn{
     background-color: #27AF1B;
-    border:1px solid #B3B3B3;
+    color: #ffffff;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 6px;
+    outline: none;
+    border: none;
+    width: 100%;
+    height: 40px;
+    text-align:center;
+    text-decoration: none;
 }
 
 .action-btns{
@@ -1570,4 +1597,11 @@ p.bottom-space{
 
 .admin-dashboard.user {
     margin-bottom: 40px;
+}
+
+.confirmation-message{
+    margin-bottom:20px;
+    font-size: 20px;
+    color:#1E1E1E;
+    font-style: italic;
 }

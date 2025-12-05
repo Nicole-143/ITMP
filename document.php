@@ -16,24 +16,11 @@ if ($_SESSION['type'] == 'user') {
 
 $givenname = $_SESSION['givenname'] ?? '';
 
-// --- HANDLE APPROVE / DENY ACTIONS ---
 $message = '';
-
-if (isset($_GET['approve']) || isset($_GET['deny'])) {
-    $request_id = isset($_GET['approve']) ? (int) $_GET['approve'] : (int) $_GET['deny'];
-    // You can change this to 'Processing' instead if that’s what your flow uses
-    $new_status = isset($_GET['approve']) ? 'Approved' : 'Denied';
-
-    $stmt = $conn->prepare("UPDATE Requests SET status = ? WHERE request_id = ?");
-    $stmt->bind_param("si", $new_status, $request_id);
-
-    if ($stmt->execute()) {
-        $message = "Request #{$request_id} has been {$new_status}.";
-    } else {
-        $message = "Error updating request status.";
-    }
-
-    $stmt->close();
+if (isset($_SESSION['message'])) {
+    $message = $_SESSION['message'];
+    // Clear the message after displaying it
+    unset($_SESSION['message']);
 }
 
 // --- FETCH PENDING REQUESTS ---
@@ -141,7 +128,7 @@ $result = $conn->query($sql);
                         <td><?php echo htmlspecialchars($payment_status); ?></td>
                         <td><?php echo htmlspecialchars($request_date); ?></td>
                         <td>
-                            <a href='view_request.php?view=<?php echo $id ?>' class='text-blue'>View Details</a>   
+                            <a href='view_request.php?view=<?php echo $request_id ?>' class='text-blue'>View Details</a>   
                         </td>
                     </tr>
                     <?php

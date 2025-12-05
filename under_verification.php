@@ -8,8 +8,26 @@ if (!isset($_SESSION['email'])) {
     exit();
 }
 
+$id = $_SESSION['id'];
+
+if (isset($_GET['logout']) && $_GET['logout'] == 'true') {
+
+$sql_delete_user = "DELETE FROM wallet WHERE user_id = $id";
+
+if (mysqli_query($conn, $sql_delete_user)) {
+
+    $sql_delete = "DELETE FROM users WHERE id = $id";
+     if (mysqli_query($conn, $sql_delete)) {
+    session_unset(); 
+    session_destroy();
+    header("Location: index.php");  
+    exit();
+     }
+}
+}
+
 // If the account is denied (has a comment)
-if (!empty($_SESSION['comment']) && !isset($_GET['denied'])) {
+if ((!empty($_SESSION['comment']) && !isset($_GET['denied']))){
     header("Location: under_verification.php?denied");
     exit();
 }
@@ -22,7 +40,7 @@ if (!empty($_SESSION['is_verified']) && $_SESSION['is_verified'] == 1) {
 
 $givenname = $_SESSION['givenname'];
 $comment = $_SESSION['comment'];
-$id = $_SESSION['id'];
+
 
 mysqli_close($conn);
 ?>
@@ -45,11 +63,7 @@ mysqli_close($conn);
             <h4>Document Request</h4>
         </div>
         </div>
-    <nav class="navigation-menu">
-        <ul>
-            <li><a href="logout.php">Logout</a></li>
-        </ul>
-    </nav>
+    
     </header>
 
     <div class="main-page">
@@ -64,13 +78,15 @@ mysqli_close($conn);
             <?php if (isset($_GET['denied'])){
                     echo '<p style="margin-bottom:12px;" >Your registration has been denied.';
                     echo '<p style="margin-bottom:17px;"><b>Reason: '. $comment. '</b></p>';
-                    echo '<a class="request-btn" href="edit_submission.php?id='.$id.'">Edit Submission</a>';
+                    echo '<p style="margin-bottom:17px;" >Your account will be deleted upon logout <br>Please register again. </p>';
+                    echo '<a class="request-btn" href="under_verification.php?logout=true">Logout</a>';
                     
                     
             }
             else{
-                echo '<p>Your registration is currently being reviewed by the Barangay Admin. You will not be able to request documents until your account is approved.</p>';
-                echo '<p>Please check back later.</p>';
+                echo '<p style="margin-bottom:12px;">Your registration is currently being reviewed by the Barangay Admin. You will not be able to request documents until your account is approved.</p>';
+                echo '<p style="margin-bottom:17px;">Please check back later.</p>';
+                echo '<a class="request-btn" href="logout.php">Logout</a>';
             }
             ?>
                

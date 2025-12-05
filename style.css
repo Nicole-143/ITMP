@@ -413,8 +413,10 @@ input::-webkit-inner-spin-button {
     align-items: center;
     justify-content: center;
     width: 600px;
-    height:400px;
+    height:auto;
     text-align: center;
+    margin:80px 0px 0px;
+    
 }
 
 .form-box.login-box.verification h2{

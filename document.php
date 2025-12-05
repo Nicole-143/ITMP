@@ -117,7 +117,12 @@ $result = $conn->query($sql);
                     $request_date   = date("m/d/Y", strtotime($row['request_date']));
                     $status         = $row['status'];
                     $delivery_mode  = $row['delivery_mode'];
-                    $payment_mode   = $row['payment_mode'] ? $row['payment_mode'] : 'Cash';
+                    if ($row['payment_mode']== 'Cash_On_Delivery'){
+                            $payment_mode = 'Cash On Delivery';
+                        }
+                        else{
+                                $payment_mode = 'Cash'; // If payment_mode is NULL, show Cash
+                        }
                     $payment_status = $row['payment_status'];
                     $doc_name       = $row['doc_name'];
 
@@ -136,13 +141,7 @@ $result = $conn->query($sql);
                         <td><?php echo htmlspecialchars($payment_status); ?></td>
                         <td><?php echo htmlspecialchars($request_date); ?></td>
                         <td>
-                            <a href="document.php?approve=<?php echo $request_id; ?>" class="text-blue">
-                                Approve
-                            </a>
-                            |
-                            <a href="document.php?deny=<?php echo $request_id; ?>" class="deny-btn">
-                                Deny
-                            </a>
+                            <a href='view_request.php?view=<?php echo $id ?>' class='text-blue'>View Details</a>   
                         </td>
                     </tr>
                     <?php

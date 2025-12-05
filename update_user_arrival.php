@@ -2,12 +2,12 @@
 include 'db.php';
 
 // Validate ID exists and is a positive integer
-if (!isset($_GET['id']) || empty($_GET['id'])) {
+if (!isset($_POST['request_id']) || empty($_POST['request_id'])) {
     header("Location: admin_shipments.php?error=invalid_id");
     exit();
 }
 
-$id = $_GET['id'];
+$id = $_POST['request_id'];
 if ($id === false || $id <= 0) {
     header("Location: admin_shipments.php?error=invalid_id");
     exit();

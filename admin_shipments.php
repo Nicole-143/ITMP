@@ -218,7 +218,7 @@ include "db.php";
                 <?php if ($show_button): ?>
                     <p class="confirmation-message confirm"><?php echo $message; ?></p>
 
-                    <form method="POST" action="">
+                    <form method="POST" action="<?php echo $action_page; ?>">
                     <input type="hidden" name="request_id" value="<?php echo $id; ?>">
                     <input type="hidden" name="action_type" value="<?php echo $action_type; ?>">
                     <input type="hidden" name="confirm_action" value="1">
@@ -233,7 +233,7 @@ include "db.php";
                         <a href="view_shipments.php" class="back-btn">Back to View Shipments</a>
                         <button type="submit" class="action-btn"><?php echo $button_text; ?></button>
                     </div>
-                </form>
+                    </form>
 
                 <?php else: ?>
                     <p class="confirmation-message confirm-complete"><?php echo $message; ?></p>
